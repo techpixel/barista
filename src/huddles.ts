@@ -1,41 +1,143 @@
-import dotenv from 'dotenv';
-dotenv.config();
 
-const headers = new Headers();
-const headerData = JSON.parse(process.env.HEADERS!) as { [key: string]: string };
+import { app } from "./bolt";
+import { prisma } from './prisma';
 
-for (const key in headerData) {
-    headers.append(key, headerData[key]);
-}
+import { huddleInfo } from "./util/huddlesAPI";
+import type { AnyBlock } from '@slack/types';
 
-const body = JSON.stringify({
-    "token": process.env.SLACK_CLIENT_TOKEN,
-    "channel_ids": ["C08B55UP0T0"]
+app.event('user_huddle_changed', async ({ payload }) => {
+    console.log("Recieved huddle update event");
+
+    const huddleRaw = (await huddleInfo());
+
+    if (!huddleRaw) { return; }
+    if (huddleRaw.huddles.length === 0) { return; }
+
+    const huddle = huddleRaw.huddles[0];
+
+    const user = await prisma.user.upsert({
+        where: { slackId: payload.user.id },
+        update: {},
+        create: { slackId: payload.user.id },
+        include: {
+            calls: {
+                where: {
+                    inCall: true
+                }
+            }
+        }
+    });
+
+    const recentHuddle = user.calls[0];
+    const inHuddle = huddle.active_members.includes(payload.user.id);
+
+    // if there is no recent huddle but the user joined the huddle, create a new call
+    if (!recentHuddle && inHuddle) {
+        await prisma.call.create({
+            data: {
+                user: { connect: { slackId: payload.user.id } },
+                inCall: true,
+                joinedAt: new Date(),
+                callId: huddle.call_id
+            }
+        });
+
+        await app.client.chat.postMessage({
+            token: process.env.SLACK_BOT_TOKEN,
+            channel: "C08B55UP0T0",
+            text: `<@${user.slackId}> joined the huddle! There are ${huddle.active_members.length} other people.`
+        });
+    }
+
+    // if there is a recent huddle but the user left the huddle, update the call
+    if (recentHuddle && !inHuddle) {
+        await prisma.call.update({
+            where: { id: recentHuddle.id },
+            data: {
+                inCall: false,
+                leftAt: new Date()
+            }
+        });
+
+        const seconds = (new Date().getTime() - recentHuddle.joinedAt.getTime()) / 1000;
+
+        await app.client.chat.postMessage({
+            token: process.env.SLACK_BOT_TOKEN,
+            channel: "C08B55UP0T0",
+            text: `<@${user.slackId}> left the huddle! They were in the huddle for ${seconds} seconds.`,
+        });
+    }
 });
 
-type Huddle = {
-    channel_id: string,
-    call_id: string,
-    active_members: string[],
-    dropped_members: string[],
-    background_id: string,
-    thread_root_ts: string,
-    created_by: string,
-    start_date: number,
-    recording: {
-        can_record_summary: string,
-    },
-    expiration: number,
-    locale: string,
-}
+app.command('/my-calls', async ({ ack, payload, context }) => {
+    await ack();
 
-export function huddleInfo(): Promise<{ huddles: Huddle[] } | undefined> {
-    return fetch("https://edgeapi.slack.com/cache/T0266FRGM/huddles/info?_x_app_name=client&fp=f5&_x_num_retries=0", {
-        method: "POST",
-        headers,
-        body,
-        redirect: "follow"
-      })
-      .then((response) => response.json())
-      .catch((error) => console.error(error));
-}
+    const calls = await prisma.call.findMany({
+        where: {
+            user: { slackId: payload.user_id }
+        }
+    });
+
+    const activeCalls = calls.filter(call => call.inCall);
+    const inactiveCalls = calls.filter(call => !call.inCall);
+
+    let blocks: AnyBlock[] = [
+        {
+            type: "section",
+            text: {
+                type: "mrkdwn",
+                text: `You have been in ${activeCalls.length} active calls and ${inactiveCalls.length} inactive calls.`
+            }
+        },
+        {
+            type: "divider"
+        }
+    ];
+
+    activeCalls.forEach(call => {
+        blocks.push({
+            type: "section",
+            text: {
+                type: "mrkdwn",
+                text: `:large_green_circle: Call ID: ${call.callId}`
+            }
+        }, {
+            "type": "context",
+            "elements": [
+                {
+                    "type": "mrkdwn",
+                    "text": `Joined at ${call.joinedAt}`
+                }
+            ]
+        }, {
+            "type": "divider"
+        });
+    });
+
+    inactiveCalls.forEach(call => {
+        blocks.push({
+            type: "section",
+            text: {
+                type: "mrkdwn",
+                text: `:red_circle: Call ID: ${call.callId}`
+            }
+        }, {
+            "type": "context",
+            "elements": [
+                {
+                    "type": "mrkdwn",
+                    "text": `Joined at ${call.joinedAt} | Left at ${call.leftAt} | Duration: ${Math.floor((call.leftAt!.getTime() - call.joinedAt.getTime()) / 1000)} seconds`
+                }
+            ]
+        }, {
+            "type": "divider"
+        });
+    });
+
+    await app.client.chat.postEphemeral({
+        token: context.botToken,
+        channel: payload.channel_id,
+        user: payload.user_id,
+        blocks
+    });
+});

@@ -5,6 +5,7 @@ import { app } from "./bolt";
 import { prisma } from './prisma';
 
 import { huddleInfo } from "./huddles";
+import type { AnyBlock } from '@slack/types';
 
 app.event('user_huddle_changed', async ({ payload }) => {
     console.log("Recieved huddle update event");
@@ -82,7 +83,7 @@ app.command('/my-calls', async ({ ack, payload, context }) => {
     const activeCalls = calls.filter(call => call.inCall);
     const inactiveCalls = calls.filter(call => !call.inCall);
 
-    let blocks = [
+    let blocks: AnyBlock[] = [
         {
             type: "section",
             text: {
@@ -93,7 +94,7 @@ app.command('/my-calls', async ({ ack, payload, context }) => {
         {
             type: "divider"
         }
-    ]
+    ];
 
     activeCalls.forEach(call => {
         blocks.push({
@@ -104,10 +105,12 @@ app.command('/my-calls', async ({ ack, payload, context }) => {
             }
         }, {
             "type": "context",
-            "text": {
-                "type": "mrkdwn",
-                "text": `Joined at ${call.joinedAt}`
-            }
+            "elements": [
+                {
+                    "type": "mrkdwn",
+                    "text": `Joined at ${call.joinedAt}`
+                }
+            ]
         }, {
             "type": "divider"
         });
@@ -122,14 +125,18 @@ app.command('/my-calls', async ({ ack, payload, context }) => {
             }
         }, {
             "type": "context",
-            "text": {
-                "type": "mrkdwn",
-                "text": `Joined at ${call.joinedAt} | Left at ${call.leftAt} | Duration: ${Math.floor((call.leftAt!.getTime() - call.joinedAt.getTime()) / 1000)} seconds`
-            }
+            "elements": [
+                {
+                    "type": "mrkdwn",
+                    "text": `Joined at ${call.joinedAt} | Left at ${call.leftAt} | Duration: ${Math.floor((call.leftAt!.getTime() - call.joinedAt.getTime()) / 1000)} seconds`
+                }
+            ]
         }, {
             "type": "divider"
         });
     });
+
+    console.log(blocks);
 
     await app.client.chat.postEphemeral({
         token: context.botToken,

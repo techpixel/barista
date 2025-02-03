@@ -3,6 +3,17 @@ import { app, mirrorMessage } from "../util/bolt";
 import type { Huddle } from "../util/bolt";
 import { config, t } from "../util/transcript";
 
+import createSession from '../sessions/create';
+import unpause from "../sessions/unpause";
+
+/*
+
+User joins call -> bot asks & user posts goal/scrap -> start a new session
+
+User rejoins call -> unpauses session
+
+*/
+
 export default async (args: {
     slackId: string,
     huddle: Huddle
@@ -14,22 +25,32 @@ export default async (args: {
         type: 'huddle_join'
     });
 
+    // Look if the user has a session that is paused
+    const session = await prisma.session.findFirst({
+        where: {
+            slackId: args.slackId,
+            paused: true
+        }
+    });
+
+    if (session) {
+        // Unpause the session
+        unpause(session);
+
+        console.log(`user rejoined call. unpaused session`)
+
+        return;
+    }
+
     /*
 
     Preemptively create a session for the user joining the huddle. This is how we will track the user as they progress through the flow
 
     */
 
-    const now = new Date();
-
-    await prisma.session.create({
-        data: {
-            user: { connect: { slackId: args.slackId } },
-            callId: args.huddle.call_id,
-            joinedAt: now,
-            lastUpdate: now,
-            state: 'WAITING_FOR_INITAL_SCRAP',
-        }
+    createSession({
+        slackId: args.slackId,
+        callId: args.huddle.call_id
     });
 
     console.log(`user joined call`)

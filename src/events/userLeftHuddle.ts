@@ -1,7 +1,7 @@
 import { prisma } from "../util/prisma";
 import { app, mirrorMessage } from "../util/bolt";
 import type { Huddle } from "../util/bolt";
-import { config } from "../util/transcript";
+import { config, t } from "../util/transcript";
 
 /*
 
@@ -47,6 +47,6 @@ export default async (args: {
     await app.client.chat.postEphemeral({
         channel: config.CAFE_CHANNEL,
         user: args.slackId,
-        text: `You left the huddle without posting a scrap. If you want your time to count, please post a scrap. Or come back in 30 minutes to resume the timer. placeholder`
+        text: t('huddle_left')
     })
 }

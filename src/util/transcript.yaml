@@ -35,3 +35,5 @@ templates:
     - "nice one! placeholder"
   inactivity:
     - "you haven't said anything in a while, so i stopped tracking your time!"
+  huddle_left:
+    - "You left the huddle without posting a scrap. If you want your time to count, please post a scrap. Or come back in 30 minutes to resume the timer. placeholder"

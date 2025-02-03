@@ -25,7 +25,7 @@ export const templates: {
 } = flatten(templatesRaw['templates']);
 
 export const config: {
-    [key: string]: string,
+    [key: string]: any,
 } = templatesRaw['config'];
 
 export function t(template: string, data: Data | null = null) {

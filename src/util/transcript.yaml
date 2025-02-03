@@ -2,18 +2,36 @@
 #huddle_join:
 config:
   CAFE_CHANNEL: C08B55UP0T0
+  LOGS_CHANNEL: C08BTE4991P
+  AFTER_JOIN_TIMEOUT: 300 # 50 minutes
+
 
 templates:
   huddle_join: #todo: copy review
     - |
-      omg omg! you just joined the huddle!
+      _omg omg!_ you just joined the huddle!
 
-      make sure to tell everyone about what you're working on!
+      *make sure to tell everyone about what you're working on!* i'll start brewin' up your cup right after :3
 
       say something like:
-      _i'm hacking on ________ (fill in the blank)_
+      ```
+      i'm hacking on ________!! (fill in the blank)
+      ```
 
       for example:
-      _i'm hacking on a new feature for the website_
+      ```
+      i'm making the text boxes on my personal site draggable!
+      i'm working on the schematic of my rubber ducky pcb :3
+      i'm starting a slack bot that tracks time!!
+      ```
+      you can also send images with the message of what you're working on!
 
-      you can also send images in the channel of what you're working on!
+      feel free to also send messages in this channel normally after, for example:
+      • progress updates! huge breakthroughs and cool demos are more than welcome!
+      • questions and asking for technical help! at the cafe, we're all here to help :D 
+  logged_goal:
+    - "nice! i've logged your goal for today! keep me updated on your progress :3"
+  logged_scrap:
+    - "nice one! placeholder"
+  inactivity:
+    - "you haven't said anything in a while, so i stopped tracking your time!"

@@ -17,6 +17,41 @@ export async function error(error: Error, slackId: string, channelId: string | u
   });    
 }
 
+export async function mirrorMessage({ message, user, channel, type }: {
+    message: string,
+    user: string,
+    channel: string,
+    type: string
+}) {
+    // try {
+    //   const context = `a ${type} from <@${user}> in <#${channel}>`
+    //   await app.client.chat.postMessage({
+    //     channel: config.LOGS_CHANNEL,
+    //     text: context,
+    //     blocks: [
+    //       {
+    //         type: 'section',
+    //         text: {
+    //           type: 'mrkdwn',
+    //           text: `> ${message}`,
+    //         },
+    //       },
+    //       {
+    //         type: 'context',
+    //         elements: [
+    //           {
+    //             type: 'mrkdwn',
+    //             text: context,
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   })
+    // } catch (e) {
+    //   console.error(e)
+    // }
+}
+
 // huddles.info
 const headers = new Headers();
 const headerData = JSON.parse(process.env.HEADERS!) as { [key: string]: string };

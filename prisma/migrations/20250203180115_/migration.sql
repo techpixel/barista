@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Session" ALTER COLUMN "state" SET DEFAULT 'UNINITIALIZED';

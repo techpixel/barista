@@ -13,22 +13,8 @@ model User {
 
   inHuddle Boolean @default(false)
 
-  calls    Call[]
   sessions Session[]
-}
-
-model Call {
-  id        Int      @id @default(autoincrement())
-  callId    String
-
-  timeMs    Int @default(0)
-
-  inCall    Boolean 
-  joinedAt  DateTime
-  leftAt    DateTime? 
-
-  slackId   String
-  user      User     @relation(fields: [slackId], references: [slackId])
+  scraps   Scrap[]
 }
 
 model Session {
@@ -41,6 +27,39 @@ model Session {
   joinedAt  DateTime
   leftAt    DateTime? 
 
-  initalScrap    String?
-  finalScrap     String?
+  elapsed   Float @default(0)
+  lastUpdate DateTime
+  paused    Boolean @default(false)
+
+  scraps     Scrap[]
+
+  state     State @default(UNINITIALIZED)
+}
+
+enum State {
+  UNINITIALIZED
+  WAITING_FOR_INITAL_SCRAP
+  SESSION_PENDING
+  WAITING_FOR_FINAL_SCRAP
+  COMPLETED
+}
+
+model Scrap {
+  id        String      @id @default(uuid())
+
+  sessionId String
+  session   Session   @relation(fields: [sessionId], references: [id])
+
+  slackId   String
+  user      User      @relation(fields: [slackId], references: [slackId])
+
+  shipTime  DateTime  @default(now())
+  type      ScrapType
+  data      Json
+}
+
+enum ScrapType {
+  INITIAL
+  IN_PROGRESS
+  FINAL
 }

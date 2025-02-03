@@ -37,16 +37,16 @@ export async function upsertUser(slackId: string) {
     }
 }
 
-export async function createCallLog(call: Prisma.CallGetPayload<{
-    include: { user: true }
-}>) {
-    console.log("Creating call log", call);
+// export async function createCallLog(call: Prisma.CallGetPayload<{
+//     include: { user: true }
+// }>) {
+//     console.log("Creating call log", call);
 
-    await callLogs.create({
-          "UID": call.id.toString(),
-          "Call ID": call.callId,
-          "Joined At": call.joinedAt.toISOString(),
-          "Left At": call.leftAt?.toISOString(),
-          "User": [call.user.airtableRecId]
-    });        
-}
+//     await callLogs.create({
+//           "UID": call.id.toString(),
+//           "Call ID": call.callId,
+//           "Joined At": call.joinedAt.toISOString(),
+//           "Left At": call.leftAt?.toISOString(),
+//           "User": [call.user.airtableRecId]
+//     });        
+// }

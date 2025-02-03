@@ -4,5 +4,16 @@
 CAFE_CHANNEL: C08B55UP0T0
 
 templates:
-  test:
-    - "test"
+  huddle_join: #todo: copy review
+    - |
+      omg omg! you just joined the huddle!
+
+      make sure to tell everyone about what you're working on!
+
+      say something like:
+      _i'm hacking on ________ (fill in the blank)_
+
+      for example:
+      _i'm hacking on a new feature for the website_
+
+      you can also send images in the channel of what you're working on!

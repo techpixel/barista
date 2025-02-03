@@ -1,7 +1,8 @@
-import { app } from "./bolt";
+import { app } from "../util/bolt";
+import { config } from "../util/transcript";
 
 app.event('file_shared', async ({ event, client }) => {
-    if (event.channel_id !== process.env.CAFE_CHANNEL) { return; }
+    if (event.channel_id !== config.CAFE_CHANNEL) { return; }
 
     console.log("Recieved file_shared event");
 

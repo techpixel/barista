@@ -9,8 +9,12 @@ datasource db {
 
 model User {
   slackId  String  @id
+  airtableRecId String @unique
+
+  inHuddle Boolean @default(false)
 
   calls    Call[]
+  sessions Session[]
 }
 
 model Call {
@@ -27,3 +31,16 @@ model Call {
   user      User     @relation(fields: [slackId], references: [slackId])
 }
 
+model Session {
+  id        String      @id @default(uuid())
+  callId    String
+
+  slackId   String
+  user      User     @relation(fields: [slackId], references: [slackId])
+
+  joinedAt  DateTime
+  leftAt    DateTime? 
+
+  initalScrap    String?
+  finalScrap     String?
+}

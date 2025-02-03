@@ -1,6 +1,23 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import { App } from '@slack/bolt';
+import { config } from './transcript';
 
+const app = new App({
+  token: process.env.SLACK_BOT_TOKEN,
+  signingSecret: process.env.SLACK_SIGNING_SECRET
+});
+
+// error logging
+export async function error(error: Error, slackId: string, channelId: string | undefined = undefined) {
+  app.logger.error(error);
+
+  await app.client.chat.postEphemeral({
+      channel: channelId ?? slackId,
+      user: slackId,
+      text: `An error occurred: ${error.message}` //todo: better error message
+  });    
+}
+
+// huddles.info
 const headers = new Headers();
 const headerData = JSON.parse(process.env.HEADERS!) as { [key: string]: string };
 
@@ -10,10 +27,10 @@ for (const key in headerData) {
 
 const body = JSON.stringify({
     "token": process.env.SLACK_CLIENT_TOKEN,
-    "channel_ids": [process.env.CAFE_CHANNEL],
+    "channel_ids": [config.CAFE_CHANNEL],
 });
 
-type Huddle = {
+export type Huddle = {
     channel_id: string,
     call_id: string,
     active_members: string[],
@@ -39,3 +56,5 @@ export function huddleInfo(): Promise<{ huddles: Huddle[] } | undefined> {
       .then((response) => response.json())
       .catch((error) => console.error(error));
 }
+
+export { app };

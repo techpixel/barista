@@ -1,0 +1,8 @@
+#cafe themed
+#huddle_join:
+
+CAFE_CHANNEL: C08B55UP0T0
+
+templates:
+  test:
+    - "test"

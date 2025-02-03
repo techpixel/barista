@@ -1,7 +1,7 @@
 #cafe themed
 #huddle_join:
-
-CAFE_CHANNEL: C08B55UP0T0
+config:
+  CAFE_CHANNEL: C08B55UP0T0
 
 templates:
   huddle_join: #todo: copy review

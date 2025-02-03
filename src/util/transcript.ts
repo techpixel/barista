@@ -1,7 +1,7 @@
 import { parse } from 'yaml';
 import fs from 'fs';
 
-const file = fs.readFileSync('./src/util/templates.yaml', 'utf8');
+const file = fs.readFileSync('./src/util/transcript.yaml', 'utf8');
 const templatesRaw = parse(file);
 
 function flatten(obj: any, prefix: string = '') {

@@ -6,6 +6,9 @@ import { app } from "../util/bolt";
 import { t } from "../util/transcript";
 
 import complete from "./complete";
+import { scraps } from "../util/airtable";
+import type { FileShareMessageEvent } from "@slack/types";
+import type { Attachment } from "airtable";
 
 /*
 
@@ -18,14 +21,18 @@ export default async (session: Session, scrap: {
     text: string,
     channel: string,
     ts: string,
-    user: string
-}) => {
+    user: string,
+},
+attachments: FileShareMessageEvent['files'] = []
+) => {
+    console.log('adding scrap to session');
+
     const now = new Date();
 
     switch (session.state) {
         // Session hasn't started yet
-        case 'WAITING_FOR_INITAL_SCRAP': {
-            await prisma.session.update({
+        case 'WAITING_FOR_INITAL_SCRAP': 
+            session = await prisma.session.update({
                 where: {
                     id: session.id
                 },
@@ -54,11 +61,11 @@ export default async (session: Session, scrap: {
                 text: t('logged_goal'),
                 thread_ts: scrap.ts
             });
-        } break;
-
+            
+            break;
         // Session is in progress
-        case 'SESSION_PENDING': {
-            await prisma.session.update({
+        case 'SESSION_PENDING': 
+            session = await prisma.session.update({
                 where: {
                     id: session.id
                 },
@@ -87,15 +94,15 @@ export default async (session: Session, scrap: {
                 text: t('logged_scrap'),
                 thread_ts: scrap.ts
             });
-        } break;
 
+            break;
         // The session has ended and we're waiting for the user to ship
-        case 'WAITING_FOR_FINAL_SCRAP': {
+        case 'WAITING_FOR_FINAL_SCRAP': 
             if (!session.leftAt) {
                 throw new Error('Session is in WAITING_FOR_FINAL_SCRAP state but leftAt is null');
             }
 
-            await prisma.session.update({
+            session = await prisma.session.update({
                 where: {
                     id: session.id
                 },
@@ -104,6 +111,8 @@ export default async (session: Session, scrap: {
                     
                     lastUpdate: session.leftAt,
                     elapsed: session.elapsed + (now.getTime() - session.leftAt.getTime()),
+
+                    paused: false,
                     
                     scraps: {
                         create: {
@@ -123,9 +132,31 @@ export default async (session: Session, scrap: {
 
             await app.client.chat.postMessage({
                 channel: scrap.channel,
-                text: t('logged_scrap'),
+                text: t('finish'),
                 thread_ts: scrap.ts
             });
-        } break;
+
+            break;
     }    
+
+    // add the scrap to airtable
+    const user = await prisma.user.findUnique({
+        where: { slackId: scrap.user }
+    });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    scraps.create({
+        "Timestamp": scrap.ts,
+        "Session": [session.airtableRecId],
+        "User": [user.airtableRecId],
+
+        "Type": scrap.type,
+        "Text": scrap.text,
+        "Created At": now.toISOString(),
+
+        "Attachments": JSON.stringify(attachments?.map(attachment => attachment.permalink))
+    });
 }

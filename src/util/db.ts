@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
-import { users, callLogs } from "./airtable";
+import { users } from "./airtable";
 import { error } from "./bolt";
 
 export async function createUser(slackId: string) {
@@ -15,22 +15,24 @@ export async function createUser(slackId: string) {
     });
 }
 
-export async function upsertUser(slackId: string) {
+export async function upsertUser(slackId: string, inHuddle: boolean) {
     try {
-        return await prisma.user.upsert({
+        // well we know for a fact that they weren't in the huddle before if we're creating them
+        // so let's check if they exist first
+        const user = await prisma.user.findUnique({
             where: {
-                slackId,
-            },
-            update: {},
-            create: {
-                slackId,
-                airtableRecId: (
-                    await users.create({
-                        "Slack ID": slackId
-                    })
-                ).id
+                slackId
             }
         });
+
+        // only create them if they're now in the huddle
+        if (!user && inHuddle) {
+            return await createUser(slackId);
+        } else if (user) {
+            return user;
+        } else {
+            return null;
+        }
     } catch (e: any) {
         error(e, slackId);
         throw e;

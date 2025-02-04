@@ -15,10 +15,15 @@ app.event('user_huddle_changed', async ({ payload }) => {
 
     const huddle = huddleRaw.huddles[0];
 
-    const user = await upsertUser(payload.user.id);
-    
-    const previousHuddleStatus = user.inHuddle;
     const inHuddle = huddle.active_members.includes(payload.user.id);
+
+    const user = await upsertUser(payload.user.id, inHuddle);
+
+    if (!user) {
+        return;
+    }
+
+    const previousHuddleStatus = user.inHuddle;
 
     // if they weren't in the huddle before but the user joined the huddle, trigger a user joined event
     if (!previousHuddleStatus && inHuddle) {

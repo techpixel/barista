@@ -25,6 +25,9 @@ app.event('message', async ({ event, client }) => {
             const session = await prisma.session.findFirst({
                 where: {
                     slackId: event.user,
+                    state: {
+                        notIn: ['COMPLETED', 'UNINITIALIZED']
+                    }
                 }
             });
 
@@ -35,8 +38,8 @@ app.event('message', async ({ event, client }) => {
                 text: event.text!,
                 channel: event.channel,
                 ts: event.ts,
-                user: event.user
-            });
+                user: event.user,
+            }, event.files);
         } break;
 
         // User sent a goal
@@ -63,7 +66,7 @@ app.event('message', async ({ event, client }) => {
                 text: event.text!,
                 channel: event.channel,
                 ts: event.ts,
-                user: event.user
+                user: event.user,
             });
 
             console.log(`user told bot what they're working on`);

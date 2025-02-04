@@ -11,7 +11,7 @@ export default async (session: Session) => {
             id: session.id
         },
         data: {
-            paused: true,
+            paused: false,
             lastUpdate: now,
             state: 'SESSION_PENDING',
         }

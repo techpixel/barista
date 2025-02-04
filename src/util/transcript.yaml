@@ -32,8 +32,15 @@ templates:
   logged_goal:
     - "nice! i've logged your goal for today! keep me updated on your progress :3"
   logged_scrap:
-    - "nice one! placeholder"
+    - "woah, whatcha makin' there? :rac_cute:"
+    - "omg omg!! scrap, scrap!!! :rac_cute:"
+    - "i wish,, i wish i could make things like that :rac_shy:"
+    - "that looks so fun!! i'd be making too if i wasn't on the job :rac_pf:"
+    - "you're currently on you [numberth] cup today!"
+    - "_twitch_ that's more cups my raccoon head could take,, you sure this is safe??" #todo if [numberth] > 5:
   inactivity:
     - "you haven't said anything in a while, so i stopped tracking your time!"
   huddle_left:
     - "You left the huddle without posting a scrap. If you want your time to count, please post a scrap. Or come back in 30 minutes to resume the timer. placeholder"
+  finish:
+    - "you finished! placeholder"

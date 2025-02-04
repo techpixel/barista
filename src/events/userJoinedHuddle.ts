@@ -29,7 +29,8 @@ export default async (args: {
     const session = await prisma.session.findFirst({
         where: {
             slackId: args.slackId,
-            paused: true
+            paused: true,
+            leftAt: null
         }
     });
 

@@ -18,7 +18,7 @@ model User {
 }
 
 model Session {
-  id        String      @id @default(uuid())
+  id        String      @id
   callId    String
 
   slackId   String
@@ -34,6 +34,8 @@ model Session {
   scraps     Scrap[]
 
   state     State @default(UNINITIALIZED)
+
+  airtableRecId String @unique
 }
 
 enum State {

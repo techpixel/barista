@@ -2,8 +2,8 @@ import { prisma } from "../util/prisma";
 import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
 import type { Huddle } from "../slack/huddleInfo";
-import { config, t } from "../util/transcript";
-import pause from "../sessions/pause";
+import { t } from "../util/transcript";
+import { Config } from "../config";
 
 /*
 
@@ -50,7 +50,7 @@ export default async (args: {
     console.log(`waiting for final scrap or for the user to rejoin the call`)
 
     await app.client.chat.postEphemeral({
-        channel: config.CAFE_CHANNEL,
+        channel: Config.CAFE_CHANNEL,
         user: args.slackId,
         text: t('huddle_left')
     })

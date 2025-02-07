@@ -24,10 +24,6 @@ export const templates: {
     [key: string]: string[]
 } = flatten(templatesRaw['templates']);
 
-export const config: {
-    [key: string]: any,
-} = templatesRaw['config'];
-
 export function t(template: string, data: Data | null = null) {
     if (!data) {
         return t_fetch(template);

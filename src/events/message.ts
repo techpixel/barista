@@ -3,9 +3,11 @@ import { checkInactivity } from "../cleanup";
 import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
-import { config, t } from "../util/transcript";
+import { t } from "../util/transcript";
 
 import addScrap from "../sessions/addScrap";
+
+import { Config } from "../config";
 
 /*
 
@@ -18,7 +20,7 @@ User left call ->  bot asks & user posts final scrap -> mark session as complete
 */
 
 app.event('message', async ({ event, client }) => {
-    if (event.channel !== config.CAFE_CHANNEL) { return; }
+    if (event.channel !== Config.CAFE_CHANNEL) { return; }
     
     switch (event.subtype) {
         // User shared a photo 

@@ -1,4 +1,4 @@
-import { config } from "../util/transcript";
+import { Config } from "../config";
 
 // huddles.info
 const headers = new Headers();
@@ -10,7 +10,7 @@ for (const key in headerData) {
 
 const body = JSON.stringify({
     "token": process.env.SLACK_CLIENT_TOKEN,
-    "channel_ids": [config.CAFE_CHANNEL],
+    "channel_ids": [Config.CAFE_CHANNEL],
 });
 
 export type Huddle = {

@@ -2,7 +2,8 @@ import { prisma } from "../util/prisma";
 import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
 import type { Huddle } from "../slack/huddleInfo";
-import { config, t } from "../util/transcript";
+import { t } from "../util/transcript";
+import { Config } from "../config";
 
 import createSession from '../sessions/create';
 import unpause from "../sessions/unpause";

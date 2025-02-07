@@ -1,5 +1,5 @@
-import { app } from "../slack/bolt";
-import { prisma } from "../util/prisma";
+import { app } from "../src/slack/bolt";
+import { prisma } from "../src/util/prisma";
 import type { AnyBlock } from "@slack/types";
 
 app.command('/call-time', async ({ ack, payload, context }) => {

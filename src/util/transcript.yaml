@@ -28,8 +28,8 @@ templates:
     - "omg omg!! scrap, scrap!!! :rac_cute:"
     - "i wish,, i wish i could make things like that :rac_shy:"
     - "that looks so fun!! i'd be making too if i wasn't on the job :rac_pf:"
-    - "you're currently on you [numberth] cup today!"
-    - "_twitch_ that's more cups my raccoon head could take,, you sure this is safe??" #todo if [numberth] > 5:
+    - "you're currently on you ${cups} cup today!"
+#    - "_twitch_ that's more cups my raccoon head could take,, you sure this is safe??" #todo if [numberth] > 5:
   inactivity:
     - "you haven't said anything in a while, so i stopped tracking your time!"
   huddle_left:
@@ -40,7 +40,10 @@ templates:
 
       internet connection cut off? need a break? not ready to ship? you have 30 minutes to join back the huddle to resume your session!
   finish:
-    - "heyyyy, you finished! noice job :3"
+    - |
+      leaving the cafe?? i hope you enjoyed it!!
+      you've drank ${cups} cups this session, which puts you at a grand total of number ${cupsTotal} :rac_woah:
+      come back again for more!! :rac_shy:
   tip:
     - "pssst... you can run `/yap` if you're done early and just wanna yap"
   

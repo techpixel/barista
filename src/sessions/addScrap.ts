@@ -130,9 +130,22 @@ attachments: FileShareMessageEvent['files'] = []
 
             complete(session);
 
+            const totalCups = await prisma.session.aggregate({
+                where: {
+                    slackId: session.slackId,
+                    state: 'COMPLETED',                
+                },
+                _sum: {
+                    elapsed: true,
+                }
+            });
+
             await app.client.chat.postMessage({
                 channel: scrap.channel,
-                text: t('finish'),
+                text: t('finish', {
+                    cups: (session.elapsed / 1000 / 60 / 60).toFixed(0), // (in hours)
+                    totalCups: totalCups._sum.elapsed ? (totalCups._sum.elapsed / 1000 / 60 / 60).toFixed(0) : 0
+                }),
                 thread_ts: scrap.ts
             });
 

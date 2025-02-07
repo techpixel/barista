@@ -2,7 +2,7 @@
 
 import type { Session } from "@prisma/client";
 import { prisma } from "../util/prisma";
-import { app } from "../util/bolt";
+import { app } from "../slack/bolt";
 import { t } from "../util/transcript";
 
 import complete from "./complete";

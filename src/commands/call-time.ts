@@ -1,4 +1,4 @@
-import { app } from "../util/bolt";
+import { app } from "../slack/bolt";
 import { prisma } from "../util/prisma";
 import type { AnyBlock } from "@slack/types";
 

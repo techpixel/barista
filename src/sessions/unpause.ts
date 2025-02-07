@@ -13,7 +13,6 @@ export default async (session: Session) => {
         data: {
             paused: false,
             lastUpdate: now,
-            state: 'SESSION_PENDING',
         }
     });
 }

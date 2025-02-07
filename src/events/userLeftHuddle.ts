@@ -1,7 +1,9 @@
 import { prisma } from "../util/prisma";
-import { app, mirrorMessage } from "../util/bolt";
-import type { Huddle } from "../util/bolt";
+import { app } from "../slack/bolt";
+import { mirrorMessage } from "../slack/logger";
+import type { Huddle } from "../slack/huddleInfo";
 import { config, t } from "../util/transcript";
+import pause from "../sessions/pause";
 
 /*
 
@@ -30,6 +32,7 @@ export default async (args: {
 
     if (!session) { return; }
 
+    const now = new Date();
     await prisma.session.update({
         where: {
             id: session.id
@@ -37,6 +40,8 @@ export default async (args: {
         data: {
             state: 'WAITING_FOR_FINAL_SCRAP',
             leftAt: new Date(),
+            lastUpdate: now,
+            elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()),
             paused: true
         }
     });

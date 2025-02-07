@@ -1,5 +1,5 @@
-import { app, huddleInfo } from "../util/bolt";
-
+import { app } from "../slack/bolt";
+import huddleInfo from "../slack/huddleInfo"; 
 import { upsertUser } from "../util/db";
 import { prisma } from "../util/prisma";
 import userJoinedHuddle from "./userJoinedHuddle";

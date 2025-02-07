@@ -1,10 +1,12 @@
 import { prisma } from "../util/prisma";
-import { app, mirrorMessage } from "../util/bolt";
-import type { Huddle } from "../util/bolt";
+import { app } from "../slack/bolt";
+import { mirrorMessage } from "../slack/logger";
+import type { Huddle } from "../slack/huddleInfo";
 import { config, t } from "../util/transcript";
 
 import createSession from '../sessions/create';
 import unpause from "../sessions/unpause";
+import isPaused from "../sessions/isPaused";
 
 /*
 
@@ -29,16 +31,18 @@ export default async (args: {
     const session = await prisma.session.findFirst({
         where: {
             slackId: args.slackId,
-            paused: true,
-            leftAt: null
         }
     });
 
     if (session) {
-        // Unpause the session
-        unpause(session);
+        if (isPaused(session)) {
+            // Unpause the session
+            unpause(session);
 
-        console.log(`user rejoined call. unpaused session`)
+            console.log(`user rejoined call. unpaused session`)
+        }
+
+        // if a session already exists and a huddle join fires, ignore it
 
         return;
     }

@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { users } from "./airtable";
-import { error } from "./bolt";
+import { error } from "../slack/logger";
 
 export async function createUser(slackId: string) {
     console.log("Creating user", slackId);

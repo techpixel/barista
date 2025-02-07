@@ -3,7 +3,14 @@
 config:
   CAFE_CHANNEL: C08B55UP0T0
   LOGS_CHANNEL: C08BTE4991P
-  AFTER_JOIN_TIMEOUT: 300 # 50 minutes
+  AFTER_JOIN_TIMEOUT: 300 # 5 minutes
+  PAUSE_TIMEOUT: 1800 # 30 minutes
+  CLEANUP_INTERVAL: 300 # 5 minutes
+
+  REMINDER_START: 300 # 5 minutes 
+#  REMINDER_INTERVAL: 900 # 15 minutes
+  AFK_TIMEOUT: 3600 # 1 hour
+
 
 
 templates:
@@ -41,6 +48,14 @@ templates:
   inactivity:
     - "you haven't said anything in a while, so i stopped tracking your time!"
   huddle_left:
-    - "You left the huddle without posting a scrap. If you want your time to count, please post a scrap. Or come back in 30 minutes to resume the timer. placeholder"
+    - |
+      you left the huddle, which means it's time to ship what you made in the session! 
+
+      write what you've done in the channel, along with an image/video demo of what you've done! 
+
+      internet connection cut off? need a break? not ready to ship? you have 30 minutes to join back the huddle to resume your session!
   finish:
-    - "you finished! placeholder"
+    - "heyyyy, you finished! noice job :3"
+  tip:
+    - "pssst... you can run `/yap` if you're done early and just wanna yap"
+  

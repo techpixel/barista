@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { checkInactivity } from "../cleanup";
-import { app, mirrorMessage } from "../util/bolt";
+import { app } from "../slack/bolt";
+import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
 import { config, t } from "../util/transcript";
 
@@ -32,6 +33,10 @@ app.event('message', async ({ event, client }) => {
             });
 
             if (!session) { return; }
+
+            if (await checkInactivity(session)) { //returns true if there is a timeout
+                return;
+            }
 
             addScrap(session, {
                 type: 'scrap',

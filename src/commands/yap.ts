@@ -1,0 +1,1 @@
+//todo: let people finish & ship while on call

@@ -44,6 +44,8 @@ enum State {
   SESSION_PENDING
   WAITING_FOR_FINAL_SCRAP
   COMPLETED
+
+  CANCELLED
 }
 
 model Scrap {

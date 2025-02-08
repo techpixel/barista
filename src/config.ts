@@ -3,7 +3,7 @@ const minutes = (minutes: number) => {
 }
 
 export const Config = {
-    CAFE_CHANNEL: 'C08B55UP0T0',
+    CAFE_CHANNEL: 'C02A74Z7G7L',
     LOGS_CHANNEL: 'C08BTE4991P',
 
     CLEANUP_INTERVAL: minutes(5), // every 5 minutes

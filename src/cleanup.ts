@@ -72,7 +72,9 @@ const pauseJob = async () => {
             await app.client.chat.postEphemeral({
                 channel: Config.CAFE_CHANNEL,
                 user: session.slackId,
-                text: t('pause_timeout')
+                text: t('pause_timeout', {
+                    slackId: session.slackId
+                })
             });
 
             // End the session

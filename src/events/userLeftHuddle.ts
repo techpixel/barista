@@ -52,6 +52,8 @@ export default async (args: {
     await app.client.chat.postEphemeral({
         channel: Config.CAFE_CHANNEL,
         user: args.slackId,
-        text: t('huddle_left')
+        text: t('huddle_left', {
+            slackId: args.slackId
+        })
     })
 }

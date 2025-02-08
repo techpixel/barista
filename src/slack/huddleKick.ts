@@ -6,11 +6,13 @@ import { app } from './bolt';
 export default async function huddleKick(slackId: string) {
     try {
         await app.client.conversations.kick({
+            token: process.env.SLACK_USER_TOKEN,
             channel: Config.CAFE_CHANNEL,
             user: slackId
         });
 
         await app.client.conversations.invite({
+            token: process.env.SLACK_USER_TOKEN,
             channel: Config.CAFE_CHANNEL,
             users: slackId
         });

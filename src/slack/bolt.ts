@@ -11,8 +11,8 @@ expressReciever.app.get('/health', async (req, res) => {
     channel: Config.LOGS_CHANNEL,
     text: 'recieved health check!'
   });
-
-  res.sendStatus(200);
+ 
+  res.status(200).send('OK');
 });
 
 const app = new App({

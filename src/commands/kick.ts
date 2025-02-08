@@ -5,6 +5,10 @@ import { prisma } from "../util/prisma";
 app.command('/kick-from-call', async ({ ack, payload }) => {
     await ack();
 
+    if (payload.user_id !== 'U04QD71QWS0') {
+        return;
+    }
+
     try {
         console.log(`/kick-from-call command received from ${payload.user_id} in ${payload.channel_id}`);
 

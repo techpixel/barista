@@ -44,7 +44,7 @@ templates:
       come back again for more!! :rac_shy:
   tip:
     - "pssst... you can run `/yap` if you're done early and just wanna yap"
-  channel_join:
+  joined_channel:
     - |
       `twitch,, twitch!!` welcome to the #cafe!!
 

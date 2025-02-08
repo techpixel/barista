@@ -6,7 +6,6 @@ app.command('/kick-from-call', async ({ ack, payload }) => {
     await ack();
 
     try {
-
         console.log(`/kick-from-call command received from ${payload.user_id} in ${payload.channel_id}`);
 
         const args = payload.text.split(" ");

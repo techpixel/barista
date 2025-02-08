@@ -15,5 +15,5 @@ export const Config = {
     FIRST_REMINDER: minutes(5), // 5 minutes
     REMINDER_INTERVAL: minutes(30), // 30 minutes
 
-    AFK_TIMEOUT: minutes(20) //60), // 1 hour
+    AFK_TIMEOUT: minutes(60), // 1 hour
 }

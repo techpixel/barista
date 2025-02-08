@@ -8,6 +8,9 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
+  "scripts": {
+    "start": "bun run ./src/entry.ts"
+  },
   "dependencies": {
     "@prisma/client": "6.3.0",
     "@slack/bolt": "^4.2.0",

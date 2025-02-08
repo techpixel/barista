@@ -29,7 +29,7 @@ app.event('message', async ({ event, client }) => {
                 where: {
                     slackId: event.user,
                     state: {
-                        notIn: ['COMPLETED', 'UNINITIALIZED']
+                        notIn: ['COMPLETED', 'UNINITIALIZED', 'CANCELLED']
                     }
                 }
             });

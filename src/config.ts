@@ -1,5 +1,5 @@
 const minutes = (minutes: number) => {
-    return minutes * 60 * 1000;
+    return minutes * 60 * 1000; // --> milliseconds
 }
 
 export const Config = {
@@ -9,11 +9,11 @@ export const Config = {
     CLEANUP_INTERVAL: minutes(5), // every 5 minutes
 
     AFTER_JOIN_TIMEOUT: minutes(5), // 5 minutes
-    PAUSE_TIMEOUT: minutes(5),// minutes(30), // 30 minutes 
+    PAUSE_TIMEOUT: minutes(10), // 30 minutes 
 
     // this triggers the first reminder after a set number of minutes
-    FIRST_REMINDER: minutes(1),//5), // 5 minutes
-    REMINDER_INTERVAL: minutes(1),//30), // 30 minutes
+    FIRST_REMINDER: minutes(5), // 5 minutes
+    REMINDER_INTERVAL: minutes(30), // 30 minutes
 
-    AFK_TIMEOUT: minutes(5),// minutes(60), // 1 hour
+    AFK_TIMEOUT: minutes(20) //60), // 1 hour
 }

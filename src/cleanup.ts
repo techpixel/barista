@@ -6,8 +6,8 @@ import cancel from "./sessions/cancel";
 
 import { Config } from "./config";
 
-function isAfter(date: Date, seconds: number): boolean {
-    return new Date().getTime() - date.getTime() > (seconds * 1000);
+function isAfter(date: Date, ms: number): boolean {
+    return new Date().getTime() - date.getTime() > (ms);
 }
 
 // Checks if a session has been inactive for too long, especially after an update
@@ -21,7 +21,7 @@ export async function checkInactivity(session: Session): Promise<boolean> { // r
     // Check if it was sent within the last 5 minutes
     const now = new Date();
 
-    if (now.getTime() - session.joinedAt.getTime() > (Config.AFTER_JOIN_TIMEOUT * 1000)) {
+    if (now.getTime() - session.joinedAt.getTime() > (Config.AFTER_JOIN_TIMEOUT)) {
         // Delete the session
         console.log("user is inactive - deleting session");
 
@@ -65,7 +65,7 @@ const pauseJob = async () => {
     let i = 0;
     for (const session of paused) {
         // check if the most recent update was Config.PAUSE_TIMEOUT ago
-        if (session.lastUpdate.getTime() + (Config.PAUSE_TIMEOUT * 1000) < new Date().getTime()) {
+        if (session.lastUpdate.getTime() + (Config.PAUSE_TIMEOUT) < new Date().getTime()) {
             console.log(`session ${session.id} has been paused for too long`);
 
             // Send a message to the user
@@ -94,7 +94,7 @@ const afkJob = async () => {
     const sessions = await prisma.session.findMany({
         where: {
             state: {
-                not: 'COMPLETED'
+                notIn: ['COMPLETED', 'CANCELLED']
             }
         }
     });
@@ -109,13 +109,25 @@ const afkJob = async () => {
 
         // send a gentle reminder if it was sent more than Config.AFTER_UPDATE_TIMEOUT ago
         if (isAfter(session.lastUpdate, Config.FIRST_REMINDER)) {
-            await app.client.chat.postEphemeral({
-                channel: Config.CAFE_CHANNEL,
-                user: session.slackId,
-                text: t('update_reminder')
-            });
+            // this will trigger everytime the job runs, so we need to make sure we only send it once
+            
+            // we could use a modulo with tolerance range
+            const minutesSinceUpdate = Math.floor((now.getTime() - session.lastUpdate.getTime()) / 1000 / 60);
 
-            i++;
+            // i'll admit, this is really bad code, because it guesstimates the next reminder based on elapsed time
+            if (minutesSinceUpdate % Config.REMINDER_INTERVAL < 5) {
+                // Send a message to the user             
+
+                await app.client.chat.postEphemeral({
+                    channel: Config.CAFE_CHANNEL,
+                    user: session.slackId,
+                    text: t('update_reminder', {
+                        slackId: session.slackId
+                    })
+                });
+
+                i++;
+            }
         }
 
         // cancel their session if it was sent more than Config.AFK_TIMEOUT ago
@@ -124,7 +136,9 @@ const afkJob = async () => {
             await app.client.chat.postEphemeral({
                 channel: Config.CAFE_CHANNEL,
                 user: session.slackId,
-                text: t('inactivity')
+                text: t('afk_timeout', {
+                    slackId: session.slackId
+                })
             });
 
             await cancel(session);
@@ -144,4 +158,4 @@ afkJob();
 setInterval(() => {
     pauseJob();
     afkJob();
-}, Config.CLEANUP_INTERVAL * 1000);
+}, Config.CLEANUP_INTERVAL);

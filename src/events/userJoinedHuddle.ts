@@ -35,6 +35,8 @@ export default async (args: {
         }
     });
 
+    console.log(`user ${args.slackId} joined call`);
+
     if (session) {
         if (isPaused(session)) {
             // Unpause the session

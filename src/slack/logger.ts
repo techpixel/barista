@@ -1,4 +1,5 @@
 import { app } from './bolt';
+import { Config } from '../config';
 
 // error logging
 export async function error(error: Error, slackId: string, channelId: string | undefined = undefined) {
@@ -17,31 +18,31 @@ export async function error(error: Error, slackId: string, channelId: string | u
       channel: string,
       type: string
   }) {
-      // try {
-      //   const context = `a ${type} from <@${user}> in <#${channel}>`
-      //   await app.client.chat.postMessage({
-      //     channel: config.LOGS_CHANNEL,
-      //     text: context,
-      //     blocks: [
-      //       {
-      //         type: 'section',
-      //         text: {
-      //           type: 'mrkdwn',
-      //           text: `> ${message}`,
-      //         },
-      //       },
-      //       {
-      //         type: 'context',
-      //         elements: [
-      //           {
-      //             type: 'mrkdwn',
-      //             text: context,
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   })
-      // } catch (e) {
-      //   console.error(e)
-      // }
+      try {
+        const context = `a ${type} from <@${user}> in <#${channel}>`
+        await app.client.chat.postMessage({
+          channel: Config.LOGS_CHANNEL,
+          text: context,
+          blocks: [
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: `> ${message}`,
+              },
+            },
+            {
+              type: 'context',
+              elements: [
+                {
+                  type: 'mrkdwn',
+                  text: context,
+                },
+              ],
+            },
+          ],
+        })
+      } catch (e) {
+        console.error(e)
+      }
   }

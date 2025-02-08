@@ -11,11 +11,13 @@ export default async function huddleKick(slackId: string) {
             user: slackId
         });
 
-        await app.client.conversations.invite({
-            token: process.env.SLACK_USER_TOKEN,
-            channel: Config.CAFE_CHANNEL,
-            users: slackId
-        });
+        setTimeout(async () => {
+            await app.client.conversations.invite({
+                token: process.env.SLACK_USER_TOKEN,
+                channel: Config.CAFE_CHANNEL,
+                users: slackId
+            });
+        }, 5000);
     } catch (e) {
         console.error(e);
     }

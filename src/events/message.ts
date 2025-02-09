@@ -51,6 +51,8 @@ app.event('message', async ({ event, client }) => {
 
         // User sent a goal
         case undefined: {
+            if (event.thread_ts) { return; } // don't accept goals in threads
+
             const session = await prisma.session.findFirst({
                 where: {
                     slackId: event.user,

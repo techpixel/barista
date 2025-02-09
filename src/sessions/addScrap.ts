@@ -132,7 +132,7 @@ attachments: FileShareMessageEvent['files'] = []
 
             complete(session);
 
-            const totalCups = await prisma.session.aggregate({
+            const lifetimeElapsed = await prisma.session.aggregate({
                 where: {
                     slackId: session.slackId,
                     state: 'COMPLETED',                
@@ -142,11 +142,15 @@ attachments: FileShareMessageEvent['files'] = []
                 }
             });
 
+            const totalCups = lifetimeElapsed._sum.elapsed ? lifetimeElapsed._sum.elapsed + session.elapsed : 0;
+
+            console.log(`session completed. total cups lifetime: ${totalCups / 1000 / 60 / 60} cups`);
+
             await app.client.chat.postMessage({
                 channel: scrap.channel,
                 text: t('finish', {
                     cups: (session.elapsed / 1000 / 60 / 60).toFixed(0), // (in hours)
-                    totalCups: totalCups._sum.elapsed ? (totalCups._sum.elapsed / 1000 / 60 / 60).toFixed(0) : 0
+                    totalCups: (totalCups / 1000 / 60 / 60).toFixed(0)
                 }),
                 thread_ts: scrap.ts
             });

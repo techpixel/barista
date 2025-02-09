@@ -25,6 +25,8 @@ app.event('message', async ({ event, client }) => {
     switch (event.subtype) {
         // User shared a photo 
         case 'file_share': {
+            if (event.thread_ts) { return; } // don't accept scraps in threads
+
             const session = await prisma.session.findFirst({
                 where: {
                     slackId: event.user,

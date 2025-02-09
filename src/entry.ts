@@ -6,6 +6,7 @@ import { app } from './slack/bolt';
 import './events/huddles';
 import './events/message';
 import './events/memberJoinedChannel';
+import './events/appMention';
 
 // import './commands/my-call';
 import './commands/kick';

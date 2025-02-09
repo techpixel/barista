@@ -40,7 +40,7 @@ templates:
   finish:
     - |
       leaving the cafe?? i hope you enjoyed it!!
-      you've drank ${cups} cups this session, which puts you at a grand total of number ${cupsTotal} :rac_woah:
+      you've drank ${cups} cups this session, which puts you at a grand total of number ${totalCups} :rac_woah:
       come back again for more!! :rac_shy:
   tip:
     - "pssst... you can run `/yap` if you're done early and just wanna yap"

@@ -62,7 +62,7 @@ templates:
 
       that's it! if you have any questions, feel free to post them in this channel :rac_shy: enjoy your stay!!
   inactivity:
-    - "you haven't said anything in a while, so i stopped tracking your time!"
+    - "it's been 10 minutes since you've joined! since you didn't post your inital scrap, i thought you were inactive, so i stopped tracking your time! rejoin and try again."
 
   pause_timeout:
     - |

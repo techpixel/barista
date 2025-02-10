@@ -29,9 +29,13 @@ export default async (args: {
     });
 
     // Look if the user has a session that is paused
+    // Make sure it's not completed or cancelled
     const session = await prisma.session.findFirst({
         where: {
             slackId: args.slackId,
+            state: {
+                notIn: ['COMPLETED', 'CANCELLED']
+            }
         }
     });
 
@@ -46,6 +50,7 @@ export default async (args: {
         }
 
         // if a session already exists and a huddle join fires, ignore it
+        // this is to prevent the bot from asking the user what they're working on again
 
         return;
     }

@@ -1,4 +1,5 @@
 import { Config } from "../config";
+import { mirrorMessage } from "./logger";
 
 // huddles.info
 const headers = new Headers();
@@ -37,5 +38,13 @@ export default function huddleInfo(): Promise<{ huddles: Huddle[] } | undefined>
         redirect: "follow"
       })
       .then((response) => response.json())
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        mirrorMessage({
+            channel: Config.LOGS_CHANNEL,
+            message: `Error fetching huddle info: ${error}`,
+            type: "error",
+            user: "self"
+        });
+        console.error(error)
+      });
 }

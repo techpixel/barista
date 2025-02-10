@@ -49,6 +49,9 @@ All the things that need to be checked on a regular basis
 - are there any sessions that are paused after 30 minutes? probably time to end the session early and send a message
 - is there anyone on call who hasn't provided any updates in `Config.AFTER_UPDATE_TIMEOUT`? gently remind them
 - is there anyone on call who has shown no activity in `Config.AFK_TIMEOUT`? end their session and send a message
+
+todo:
+- are there any sessions waiting for a final scrap after 30 minutes? cancel the session and send a message
 */
 const pauseJob = async () => {
     console.log("checking for paused sessions");

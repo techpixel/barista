@@ -39,7 +39,7 @@ export default async (args: {
         },
         data: {
             state: 'WAITING_FOR_FINAL_SCRAP',
-            leftAt: new Date(),
+            leftAt: now,
             lastUpdate: now,
             elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()),
             paused: true

@@ -83,7 +83,7 @@ templates:
       i'm going to be pausing your time until you post it!!
   afk_timeout:
     - |
-      <@${slackId}> you good there? it's been _two whole hours_, and i haven't seen you move!! 
+      <@${slackId}> you good there? it's been _a whole hour_, and i haven't seen you move!! 
 
       going to boot you from this place to make room - next time, remember to post scraps of what you've been making into the channel :racpf: 
 

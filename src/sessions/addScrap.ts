@@ -142,7 +142,7 @@ attachments: FileShareMessageEvent['files'] = []
                 }
             });
 
-            const totalCups = lifetimeElapsed._sum.elapsed ? lifetimeElapsed._sum.elapsed + session.elapsed : 0;
+            const totalCups = lifetimeElapsed._sum.elapsed ? lifetimeElapsed._sum.elapsed : 0;
 
             console.log(`session completed. total cups lifetime: ${totalCups / 1000 / 60 / 60} cups`);
 

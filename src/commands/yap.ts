@@ -6,6 +6,8 @@ import { prisma } from "../util/prisma";
 app.command('/yap', async ({ ack, payload }) => {
     await ack();
 
+    //todo handle inital_scrap
+
     const session = await prisma.session.findFirst({
         where: {
             slackId: payload.user_id,

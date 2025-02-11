@@ -5,6 +5,9 @@ import { prisma } from "../util/prisma";
 app.command('/my-cups', async ({ ack, payload }) => {
     await ack();
 
+    const start = new Date();
+    console.log(`user wants to know their cups`);
+
     try {
         const lifetimeElapsed = await prisma.session.aggregate({
             where: {
@@ -25,7 +28,12 @@ app.command('/my-cups', async ({ ack, payload }) => {
             user: payload.user_id,
             text: `You have ${totalCups.toFixed(0)} cups!` 
         });
+
+        console.log(`user has ${totalCups.toFixed(0)} cups`);
     } catch (e) {
         console.error(e);
     }
+
+    const end = new Date();
+    console.log(`command executed in ${end.getTime() - start.getTime()}ms`);
 });

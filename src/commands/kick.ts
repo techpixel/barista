@@ -1,5 +1,7 @@
+import { Config } from "../config";
 import { app } from "../slack/bolt";
 import huddleKick from "../slack/huddleKick";
+import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
 
 app.command('/kick-from-call', async ({ ack, payload }) => {
@@ -8,6 +10,13 @@ app.command('/kick-from-call', async ({ ack, payload }) => {
     if (payload.user_id !== 'U04QD71QWS0') {
         return;
     }
+
+    await mirrorMessage({
+        message: 'user ran `/kick-from-call`',
+        user: payload.user_id,
+        channel: Config.LOGS_CHANNEL,
+        type: 'slash-command'
+    })
 
     try {
         console.log(`/kick-from-call command received from ${payload.user_id} in ${payload.channel_id}`);

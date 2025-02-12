@@ -1,10 +1,19 @@
+import { Config } from "../config";
 import { app } from "../slack/bolt";
+import { mirrorMessage } from "../slack/logger";
 import { whisper } from "../slack/whisper";
 import { prisma } from "../util/prisma";
 import { formatHour } from "../util/transcript";
 
 app.command('/my-cups', async ({ ack, payload }) => {
     await ack();
+
+    await mirrorMessage({
+        message: 'user ran `/my-cups`',
+        user: payload.user_id,
+        channel: Config.LOGS_CHANNEL,
+        type: 'slash-command'
+    })
 
     const start = new Date();
     console.log(`user wants to know their cups`);

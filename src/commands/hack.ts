@@ -5,6 +5,7 @@ import { prisma } from "../util/prisma";
 import { genProgressBar, t } from "../util/transcript";
 import createSession from "../sessions/create";
 import { Config } from "../config";
+import { mirrorMessage } from "../slack/logger";
 
 // pretty much treat this as the user leaving the huddle
 
@@ -12,7 +13,12 @@ app.command('/hack', async ({ ack, payload }) => {
     try {
         await ack();
 
-        //todo handle inital_scrap
+        await mirrorMessage({
+            message: 'user ran `/hack`',
+            user: payload.user_id,
+            channel: Config.LOGS_CHANNEL,
+            type: 'slash-command'
+        })
 
         const session = await prisma.session.findFirst({
             where: {

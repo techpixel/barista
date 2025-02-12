@@ -1,4 +1,6 @@
+import { Config } from "../config";
 import { app } from "../slack/bolt";
+import { mirrorMessage } from "../slack/logger";
 import { whisper } from "../slack/whisper";
 import { prisma } from "../util/prisma";
 import { t } from "../util/transcript";
@@ -8,7 +10,12 @@ import { t } from "../util/transcript";
 app.command('/yap', async ({ ack, payload }) => {
     await ack();
 
-    //todo handle inital_scrap
+    await mirrorMessage({
+        message: 'user ran `/yap`',
+        user: payload.user_id,
+        channel: Config.LOGS_CHANNEL,
+        type: 'slash-command'
+    })
 
     const session = await prisma.session.findFirst({
         where: {

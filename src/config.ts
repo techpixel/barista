@@ -12,7 +12,7 @@ export const Config = {
     PAUSE_TIMEOUT: minutes(20), // 30 minutes 
 
     // this triggers the first reminder after a set number of minutes
-    FIRST_REMINDER: minutes(5), // 5 minutes
+    FIRST_REMINDER: minutes(45), // 45 minutes
     REMINDER_INTERVAL: minutes(30), // 30 minutes
 
     AFK_TIMEOUT: minutes(60), // 1 hour

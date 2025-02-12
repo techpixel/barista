@@ -32,11 +32,12 @@ templates:
 #    - "_twitch_ that's more cups my raccoon head could take,, you sure this is safe??" #todo if [numberth] > 5:
   huddle_left:
     - |
-      <@${slackId}> leaving now?? well, glad you came!! 
+      <@${slackId}> leaving? that means it's time to make a ship post of what you've done in the session :rac_woah: 
 
-      remember to make a ship post within the next 10 minutes for your time to count!! 
-
-      if you're just pausing your time - join back within the next 10 minutes to resume your timer!!
+      *post in channel what you've done while on huddle, with an attached image!*
+      
+      if you accidentally left, join back the huddle in the next 10 minutes for me to resume your time :rac_wtf: 
+      you _must_ make a ship post, or none of the time you just huddled for will be counted! 
   finish:
     - |
       leaving the cafe?? i hope you enjoyed it!!
@@ -76,11 +77,9 @@ templates:
       - _i added and wired up some decoupling capacitors on my schematic :3_
   update_reminder:
     - | 
-      <@${slackId}> hey- _hey_!! it's been an hour without you posting anything... are you still alive?? mind giving me a scrap to feed off of so i have the motivation to get you your next cup? :rac_wtf:
+      <@${slackId}> @[person] it's been 45 minutes since you joined the huddle, and i haven't seen any scraps from you! i need to see at least one scrap from you per hour, or i'll assume you've gone afk and wipe your time. 
 
-      post a picture of what you're working on in channel to give me a scrap!!
-
-      i'm going to be pausing your time until you post it!!
+      _a scrap is a update post on your project, attached with an image_ :rac_info: 
   afk_timeout:
     - |
       <@${slackId}> you good there? it's been _a whole hour_, and i haven't seen you move!! 
@@ -88,4 +87,46 @@ templates:
       going to boot you from this place to make room - next time, remember to post scraps of what you've been making into the channel :racpf: 
 
       if you're here to yap, that's fine too, just remember to use /yap when you're on, so that it doesn't track your time!!
+
+  hack_initial_scrap:
+    - |
+      *make sure to tell everyone about what you're working on!* i'll start brewin' up your cup right after :3
+
+      say something like:
+      ```
+      i'm hacking on ________!! (fill in the blank)
+      ```
+
+      for example:
+      ```
+      i'm making the text boxes on my personal site draggable!
+      i'm working on the schematic of my rubber ducky pcb :3
+      i'm starting a slack bot that tracks time!!
+      ```
+      you can also send images with the message of what you're working on!
+
+      feel free to also send messages in this channel normally after, for example:
+      • progress updates! huge breakthroughs and cool demos are more than welcome!
+      • questions and asking for technical help! at the cafe, we're all here to help :D
+  hack_final_scrap:
+    - | 
+      it's time to make a ship post of what you've done in the session :rac_woah: 
+
+      *post in channel what you've done while on huddle, with an attached image!*
+      
+      you _must_ make a ship post, or none of the time you just huddled for will be counted! 
+
+  yap_no_scrap:
+    - |
+      just chilling? that's fine!
+      i stopped tracking your time, but if you wanna start hacking again while on call, run `/hack`!
+
+  yap_final_scrap:
+    - |
+      seems like you're done with hacking! 
+
+      make a ship post of what you've done in the session :rac_woah: and i'll count your time!
+      *make sure you attach an image to your ship!*
+
+      otherwise, feel free to stay and yap with us :3
   

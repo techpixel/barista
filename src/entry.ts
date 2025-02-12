@@ -8,8 +8,8 @@ import './events/message';
 import './events/memberJoinedChannel';
 import './events/appMention';
 
-import './commands/myCups';
 import './commands/kick';
+import './commands/hack';
 import './commands/yap';
 
 import { Config } from './config';

@@ -5,6 +5,7 @@ import { app } from "./slack/bolt";
 import cancel from "./sessions/cancel";
 
 import { Config } from "./config";
+import { sendDM } from "./slack/dm";
 
 function isAfter(date: Date, ms: number): boolean {
     return new Date().getTime() - date.getTime() > (ms);
@@ -32,8 +33,7 @@ export async function checkInactivity(session: Session): Promise<boolean> { // r
         });
 
         // Send inactivity message
-        await app.client.chat.postEphemeral({
-            channel: Config.CAFE_CHANNEL,
+        await sendDM({
             user: session.slackId,
             text: t('inactivity')
         });
@@ -114,32 +114,20 @@ const afkJob = async () => {
 
         // send a gentle reminder if it was sent more than Config.AFTER_UPDATE_TIMEOUT ago
         if (isAfter(session.lastUpdate, Config.FIRST_REMINDER)) {
-            // this will trigger everytime the job runs, so we need to make sure we only send it once
-            
-            // we could use a modulo with tolerance range
-            const minutesSinceUpdate = Math.floor((now.getTime() - session.lastUpdate.getTime()) / 1000 / 60);
+            await sendDM({
+                user: session.slackId,
+                text: t('update_reminder', {
+                    slackId: session.slackId
+                })
+            });
 
-            // i'll admit, this is really bad code, because it guesstimates the next reminder based on elapsed time
-            if (minutesSinceUpdate % Config.REMINDER_INTERVAL < 5) {
-                // Send a message to the user             
-
-                await app.client.chat.postEphemeral({
-                    channel: Config.CAFE_CHANNEL,
-                    user: session.slackId,
-                    text: t('update_reminder', {
-                        slackId: session.slackId
-                    })
-                });
-
-                i++;
-            }
+            i++;
         }
 
         // cancel their session if it was sent more than Config.AFK_TIMEOUT ago
         if (isAfter(session.lastUpdate, Config.AFK_TIMEOUT)) {
             // Send inactivity message
-            await app.client.chat.postEphemeral({
-                channel: Config.CAFE_CHANNEL,
+            await sendDM({
                 user: session.slackId,
                 text: t('afk_timeout', {
                     slackId: session.slackId

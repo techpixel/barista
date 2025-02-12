@@ -90,10 +90,10 @@ app.command('/hack', async ({ ack, payload }) => {
 
             await whisper({
                 user: payload.user_id,
-                header: `${genProgressBar(10, minutesToNextHour/60)}\n${minutesToNextHour}m/60m before I pour your next cup!`,
-                text: `you've been in the huddle for ${minutes}m, which means you've earned ${cups} cups of coffee!
+                header: `${genProgressBar(10, minutesToNextHour/60)} ${minutesToNextHour.toFixed(0)}m/60m before I pour your next cup!`,
+                text: `you've been in the huddle for ${minutes.toFixed(0)}m, which means you've earned ${cups} cups of coffee!
                 
-                you have ${minutesUntilNextScrap}m to send your next scrap!`
+you have ${minutesUntilNextScrap}m to send your next scrap!`
             })
 
             return;

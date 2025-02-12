@@ -6,7 +6,7 @@ import userJoinedHuddle from "./userJoinedHuddle";
 import userLeftHuddle from "./userLeftHuddle";
 
 app.event('user_huddle_changed', async ({ payload }) => {
-    // console.log("Recieved huddle update event");
+    console.log("Recieved huddle update event");
 
     // Get huddle info
     const huddleRaw = (await huddleInfo());

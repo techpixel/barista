@@ -81,19 +81,28 @@ app.command('/hack', async ({ ack, payload }) => {
             return;
         }
         else if (session.state === 'SESSION_PENDING') {
-            const minutes = (session.elapsed/1000/60)
+            const now = new Date();
+            const sinceJoin = now.getTime() - session.joinedAt.getTime();
+
+            const minutes = (sinceJoin/1000/60)
             const minutesToNextHour = minutes % 60;
             const cups = Math.floor(minutes/60);
 
-            const timeUntilNextScrap = (session.lastUpdate.getTime() + Config.FIRST_REMINDER) - new Date().getTime();
+            const timeUntilNextScrap = (session.lastUpdate.getTime() + Config.FIRST_REMINDER) - now.getTime();
             const minutesUntilNextScrap = Math.ceil(timeUntilNextScrap/1000/60);
+
+            const minutesCounted = (session.elapsed/1000/60);
+            const countedCups = Math.floor(minutesCounted/60);
 
             await whisper({
                 user: payload.user_id,
                 header: `${genProgressBar(10, minutesToNextHour/60)} ${minutesToNextHour.toFixed(0)}m/60m before I pour your next cup!`,
-                text: `you've been in the huddle for ${minutes.toFixed(0)}m, which means you've earned ${cups} cups of coffee!
+                text: `you've been in the huddle for ${minutes.toFixed(0)}m! that's ${cups} cups of coffee!
+
+i've only counted ${minutesCounted.toFixed(0)}m so far. which means you've earned ${countedCups} :cup: (cups) of coffee.
+_(i count time everytime you post a scrap. once you post a scrap, this number will update!)_ 
                 
-you have ${minutesUntilNextScrap}m to send your next scrap!`
+you have ${minutesUntilNextScrap}m to send your next scrap before I boot you out!`
             })
 
             return;

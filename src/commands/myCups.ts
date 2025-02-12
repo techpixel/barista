@@ -55,17 +55,17 @@ app.command('/my-cups', async ({ ack, payload }) => {
             // user not in a session rn
 
             const totalMs = lifetimeElapsed._sum.elapsed;
-            const totalCups = lifetimeElapsed._sum.elapsed / 1000 / 60 / 60; // (in hours)
+            const totalCups = Math.floor(lifetimeElapsed._sum.elapsed / 1000 / 60 / 60); // (in hours)
     
             blocks.push({
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `You have ${totalCups.toFixed(0)} _total_ cups!\n(that's ${formatHour(totalMs)} hours)`
+                    text: `You have ${totalCups} _total_ cups!\n(that's ${formatHour(totalMs)} hours)`
                 }
             });
 
-            console.log(`user has ${totalCups.toFixed(0)} cups`);
+            console.log(`user has ${totalCups} cups`);
         }         
 
         if (inProgressElapsed._sum.elapsed) { 

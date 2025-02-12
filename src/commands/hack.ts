@@ -40,6 +40,8 @@ app.command('/hack', async ({ ack, payload }) => {
                     header: "you're not in a huddle!",
                     text: "seems like no one is in a huddle rn. you should start one!"
                 });
+
+                return;
             }
 
             const huddle = huddleRaw.huddles[0];

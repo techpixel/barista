@@ -46,23 +46,6 @@ export async function whisper(args: {
         channel: args.channel || Config.CAFE_CHANNEL,
         user: args.user,
         text: args.text,
-        blocks: [
-            {
-                "type": "context",
-                "elements": [
-                    {
-                        "type": "mrkdwn",
-                        "text": "_psst..._"
-                    }
-                ]
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": args.text
-                }
-            }            
-        ]
+        blocks
     });
 }

@@ -4,6 +4,7 @@ import { upsertUser } from "../util/db";
 import { prisma } from "../util/prisma";
 import userJoinedHuddle from "../events/userJoinedHuddle";
 import userLeftHuddle from "../events/userLeftHuddle";
+import { whisper } from "../slack/whisper";
 
 // pretty much manually trigger the event
 
@@ -43,6 +44,8 @@ app.command('/fix-huddle', async ({ payload }) => {
             slackId: slackId,
             huddle
         });
+
+        return;
     } 
 
     // if they were in the huddle but the user left the huddle, update the call
@@ -60,5 +63,12 @@ app.command('/fix-huddle', async ({ payload }) => {
             slackId: slackId,
             huddle
         });
+
+        return;
     }
+
+    await whisper({
+        user: slackId,
+        text: `You are already ${inHuddle ? 'in' : 'not in'} the huddle`
+    })
 });

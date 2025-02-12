@@ -1,5 +1,5 @@
 import { app } from "../slack/bolt";
-import huddleKick from "../slack/huddleKick";
+import { whisper } from "../slack/whisper";
 import { prisma } from "../util/prisma";
 import { formatHour } from "../util/transcript";
 
@@ -25,8 +25,7 @@ app.command('/my-cups', async ({ ack, payload }) => {
         const totalMs = lifetimeElapsed._sum.elapsed;
         const totalCups = lifetimeElapsed._sum.elapsed / 1000 / 60 / 60; // (in hours)
 
-        await app.client.chat.postEphemeral({
-            channel: payload.channel_id,
+        await whisper({
             user: payload.user_id,
             text: `You have ${totalCups.toFixed(0)} _total_ cups!\n(that's ${formatHour(totalMs)} hours)`, 
         });

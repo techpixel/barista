@@ -44,7 +44,7 @@ app.command('/hack', async ({ ack, payload }) => {
 
             const huddle = huddleRaw.huddles[0];
 
-            const inHuddle = huddle.active_members.includes(payload.user.id);
+            const inHuddle = huddle.active_members.includes(payload.user_id);
 
             if (!inHuddle) {
                 await whisper({

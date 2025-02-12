@@ -11,12 +11,11 @@ const initalHuddleData = await huddleInfo();
 let previousHuddleMembers: string[] = [];
 
 if (initalHuddleData) {
-    let previousHuddleMembers: string[] = initalHuddleData.huddles[0].active_members;;
+    let previousHuddleMembers: string[] = initalHuddleData.huddles[0].active_members;
 }
 
-
-setTimeout(async () => {
-    // console.log("Recieved huddle update event");
+const inital = async () => {
+    console.log('running poll on huddle states')
 
     // Get huddle info
     const huddleRaw = (await huddleInfo());
@@ -72,4 +71,6 @@ setTimeout(async () => {
     };
 
     previousHuddleMembers = huddle.active_members;
-}, minutes(0.5));
+}
+
+setTimeout(inital, minutes(0.5));

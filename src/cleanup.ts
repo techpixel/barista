@@ -99,8 +99,9 @@ const afkJob = async () => {
     const sessions = await prisma.session.findMany({
         where: {
             state: {
-                notIn: ['COMPLETED', 'CANCELLED']
-            }
+                notIn: ['COMPLETED', 'CANCELLED'],
+            },
+            leftAt: null,
         }
     });
 

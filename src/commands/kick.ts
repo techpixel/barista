@@ -14,7 +14,7 @@ app.command('/kick-from-call', async ({ ack, payload }) => {
     await mirrorMessage({
         message: 'user ran `/kick-from-call`',
         user: payload.user_id,
-        channel: Config.LOGS_CHANNEL,
+        channel: payload.channel_id,
         type: 'slash-command'
     })
 

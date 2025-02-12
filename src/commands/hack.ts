@@ -16,7 +16,7 @@ app.command('/hack', async ({ ack, payload }) => {
         await mirrorMessage({
             message: 'user ran `/hack`',
             user: payload.user_id,
-            channel: Config.LOGS_CHANNEL,
+            channel: payload.channel_id,
             type: 'slash-command'
         })
 

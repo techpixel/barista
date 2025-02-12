@@ -13,7 +13,7 @@ app.command('/yap', async ({ ack, payload }) => {
     await mirrorMessage({
         message: 'user ran `/yap`',
         user: payload.user_id,
-        channel: Config.LOGS_CHANNEL,
+        channel: payload.channel_id,
         type: 'slash-command'
     })
 

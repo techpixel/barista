@@ -48,3 +48,20 @@ export default function huddleInfo(): Promise<{ huddles: Huddle[] } | undefined>
         console.error(error)
       });
 }
+
+export function grabAllMembers(huddle: Huddle[]): string[] {
+    let active = [];
+    for (const h of huddle) {
+        active.push(...h.active_members);
+    }
+    return active;
+}
+
+export function grabActiveHuddle(huddle: Huddle[]): Huddle | undefined {
+    for (const h of huddle) {
+        if (h.active_members.length > 0) {
+            return h;
+        }
+    }
+    return undefined;
+}

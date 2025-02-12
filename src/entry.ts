@@ -13,7 +13,7 @@ import './commands/hack';
 import './commands/yap';
 import './commands/myCups'; 
 import './commands/huddleInfo';
-import './commands/checkHuddle';
+import './commands/fixHuddle';
 
 import './huddlePatch';
 

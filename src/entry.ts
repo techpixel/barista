@@ -12,6 +12,7 @@ import './commands/kick';
 import './commands/hack';
 import './commands/yap';
 import './commands/myCups'; 
+import './commands/huddleInfo';
 
 import { Config } from './config';
 

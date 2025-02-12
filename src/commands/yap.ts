@@ -26,7 +26,14 @@ app.command('/yap', async ({ ack, payload }) => {
         }
     });
 
-    if (!session) { return; }
+    if (!session) { 
+        await whisper({
+            user: payload.user_id,
+            text: `doesn't seem like you're in a session rn! see ya later!`
+        })
+
+        return;
+    }
 
     if (session.state === 'SESSION_PENDING') {
         const now = new Date();

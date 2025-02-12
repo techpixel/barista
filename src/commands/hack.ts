@@ -99,10 +99,13 @@ app.command('/hack', async ({ ack, payload }) => {
                 header: `${genProgressBar(10, minutesToNextHour/60)} ${minutesToNextHour.toFixed(0)}m/60m before I pour your next cup!`,
                 text: `you've been in the huddle for ${minutes.toFixed(0)}m! that's ${cups} cups of coffee!
 
-i've only counted ${minutesCounted.toFixed(0)}m so far. which means you've earned ${countedCups} :cup: (cups) of coffee.
+i've only counted ${minutesCounted.toFixed(0)}m so far. 
+that means you'll earn ${countedCups} :cup: (cups) of coffee once you ship! (if you go afk, it won't count!)
 _(i count time everytime you post a scrap. once you post a scrap, this number will update!)_ 
                 
-you have ${minutesUntilNextScrap}m to send your next scrap before I boot you out!`
+you have ${minutesUntilNextScrap}m to send your next scrap before I boot you out!
+
+oh and btw you can end early and stay on call by using \`/yap\`!`
             })
 
             return;

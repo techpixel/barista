@@ -15,6 +15,8 @@ import './commands/myCups';
 import './commands/huddleInfo';
 import './commands/checkHuddle';
 
+import './huddlePatch';
+
 import { Config } from './config';
 
 await app.start(process.env.PORT || 3000).then(() => {

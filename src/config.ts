@@ -1,4 +1,4 @@
-const minutes = (minutes: number) => {
+export const minutes = (minutes: number) => {
     return minutes * 60 * 1000; // --> milliseconds
 }
 

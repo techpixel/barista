@@ -8,8 +8,10 @@ import { whisper } from "../slack/whisper";
 
 // pretty much manually trigger the event
 
-app.command('/fix-huddle', async ({ payload }) => {
+app.command('/fix-huddle', async ({ ack, payload }) => {
     // console.log("Recieved huddle update event");
+    await ack();
+    
     const slackId = payload.user_id;
 
     // Get huddle info

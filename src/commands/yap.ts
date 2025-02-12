@@ -53,7 +53,18 @@ app.command('/yap', async ({ ack, payload }) => {
             }
         });
 
+        await whisper({
+            user: session.slackId,
+            text: `seems like you're here to just yap! i won't be keeping track of your time. have fun!`
+        })
+
         console.log(`user wants to yap`)
         console.log(`session deleted`)
+    }
+    else {
+        await whisper({
+            user: session.slackId,
+            text: `seems like it's not the time to yap!`
+        })
     }
 });

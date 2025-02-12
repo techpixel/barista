@@ -52,6 +52,8 @@ app.command('/hack', async ({ ack, payload }) => {
                     header: "you're not in a huddle!",
                     text: "you should join the huddle!"
                 });
+
+                return;
             }
 
             await whisper({
@@ -64,6 +66,8 @@ app.command('/hack', async ({ ack, payload }) => {
                     slackId: payload.user_id,
                     callId: huddle.call_id
             });
+
+            return;
         }
         else if (session.state === 'WAITING_FOR_INITAL_SCRAP') {
             await whisper({
@@ -71,6 +75,8 @@ app.command('/hack', async ({ ack, payload }) => {
                 header: "i'm waiting for your first scrap! let me give you the rundown again:",
                 text: t('hack_initial_scrap')
             })
+
+            return;
         }
         else if (session.state === 'SESSION_PENDING') {
             const minutes = (session.elapsed/1000/60)
@@ -87,6 +93,8 @@ app.command('/hack', async ({ ack, payload }) => {
                 
                 you have ${minutesUntilNextScrap}m to send your next scrap!`
             })
+
+            return;
         }
         else if (session.state === 'WAITING_FOR_FINAL_SCRAP') {
             await whisper({
@@ -94,12 +102,16 @@ app.command('/hack', async ({ ack, payload }) => {
                 header: "i'm waiting for your final scrap! let me give you the rundown again:",
                 text: t('hack_final_scrap')
             })
+
+            return;
         }
         else if (session.state === 'UNINITIALIZED') {
             await whisper({
                 user: payload.user_id,
                 text: "i'm a little slow rn *twitch twich* try again in a bit"
             })
+
+            return;
         }
     } catch (e) {
         console.error(e);
@@ -110,5 +122,6 @@ app.command('/hack', async ({ ack, payload }) => {
             text: `${e}`
         })
 
+        return;
     }
 });

@@ -149,7 +149,7 @@ attachments: FileShareMessageEvent['files'] = []
             await app.client.chat.postMessage({
                 channel: scrap.channel,
                 text: t('finish', {
-                    cups: (session.elapsed / 1000 / 60 / 60).toFixed(0), // (in hours)
+                    cups: Math.floor(session.elapsed / 1000 / 60 / 60), // (in hours)
                     totalCups: Math.floor(totalCups / 1000 / 60 / 60)
                 }),
                 thread_ts: scrap.ts

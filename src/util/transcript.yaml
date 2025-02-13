@@ -77,7 +77,7 @@ templates:
       - _i added and wired up some decoupling capacitors on my schematic :3_
   update_reminder:
     - | 
-      <@${slackId}> @[person] it's been 45 minutes since you joined the huddle, and i haven't seen any scraps from you! i need to see at least one scrap from you per hour, or i'll assume you've gone afk and wipe your time. 
+      <@${slackId}> it's been 45 minutes since you joined the huddle, and i haven't seen any scraps from you! i need to see at least one scrap from you per hour, or i'll assume you've gone afk and wipe your time. 
 
       _a scrap is a update post on your project, attached with an image_ :rac_info: 
   afk_timeout:

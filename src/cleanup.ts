@@ -145,11 +145,13 @@ const afkJob = async () => {
     console.log(`terminated ${j} AFK sessions`);
 };
 
-// run at boot
-pauseJob();
-afkJob();
+// for now let's just not run polling, I think she's breaking bc of it
 
-setInterval(() => {
-    pauseJob();
-    afkJob();
-}, Config.CLEANUP_INTERVAL);
+// // run at boot
+// pauseJob();
+// afkJob();
+
+// setInterval(() => {
+//     pauseJob();
+//     afkJob();
+// }, Config.CLEANUP_INTERVAL);

@@ -4,6 +4,7 @@ import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
 import { formatHour } from "../util/transcript";
+import { whisper } from "../slack/whisper";
 
 app.command('/my-cups', async ({ ack, payload }) => {
     await ack();
@@ -96,6 +97,11 @@ app.command('/my-cups', async ({ ack, payload }) => {
         });
     } catch (e) {
         console.error(e);
+
+        whisper({
+            user: payload.user_id,
+            text: `*twitch twitch* i erm broke something: ${e}`
+        });
     }
 
     const end = new Date();

@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Session" ADD COLUMN     "elapsed" DOUBLE PRECISION NOT NULL DEFAULT 0,
-ADD COLUMN     "lastUpdate" TIMESTAMP(3);

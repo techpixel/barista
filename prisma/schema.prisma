@@ -8,34 +8,37 @@ datasource db {
 }
 
 model User {
-  slackId  String  @id
-  airtableRecId String @unique
-
-  inHuddle Boolean @default(false)
-
-  sessions Session[]
-  scraps   Scrap[]
+  slackId       String    @id
+  airtableRecId String    @unique
+  inHuddle      Boolean   @default(false)
+  scraps        Scrap[]
+  sessions      Session[]
 }
 
 model Session {
-  id        String      @id
-  callId    String
+  id            String    @id
+  callId        String
+  slackId       String
+  joinedAt      DateTime
+  leftAt        DateTime?
+  elapsed       Float     @default(0)
+  lastUpdate    DateTime
+  paused        Boolean   @default(false)
+  state         State     @default(UNINITIALIZED)
+  airtableRecId String    @unique
+  scraps        Scrap[]
+  user          User      @relation(fields: [slackId], references: [slackId])
+}
 
+model Scrap {
+  id        String    @id @default(uuid())
+  sessionId String
   slackId   String
-  user      User     @relation(fields: [slackId], references: [slackId])
-
-  joinedAt  DateTime
-  leftAt    DateTime? 
-
-  elapsed   Float @default(0)
-  lastUpdate DateTime
-  paused    Boolean @default(false)
-
-  scraps     Scrap[]
-
-  state     State @default(UNINITIALIZED)
-
-  airtableRecId String @unique
+  shipTime  DateTime  @default(now())
+  type      ScrapType
+  data      Json
+  session   Session   @relation(fields: [sessionId], references: [id])
+  user      User      @relation(fields: [slackId], references: [slackId])
 }
 
 enum State {
@@ -44,22 +47,7 @@ enum State {
   SESSION_PENDING
   WAITING_FOR_FINAL_SCRAP
   COMPLETED
-
   CANCELLED
-}
-
-model Scrap {
-  id        String      @id @default(uuid())
-
-  sessionId String
-  session   Session   @relation(fields: [sessionId], references: [id])
-
-  slackId   String
-  user      User      @relation(fields: [slackId], references: [slackId])
-
-  shipTime  DateTime  @default(now())
-  type      ScrapType
-  data      Json
 }
 
 enum ScrapType {

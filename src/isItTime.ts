@@ -1,3 +1,7 @@
+import { minutes } from "./config";
+import { whisper } from "./slack/whisper";
+import { prisma } from "./util/prisma";
+
 const endTime = new Date('2025-02-18T00:00:00.000Z');
 
 export async function isItTime(userId: string): Promise<boolean> {
@@ -15,6 +19,32 @@ export async function isItTime(userId: string): Promise<boolean> {
     return false;
 }
 
-function whisper(arg0: { user: any; text: string; }) {
-    throw new Error("Function not implemented.");
-}
+setTimeout(async () => {
+    const now = new Date();
+
+    if (now.getTime() > endTime.getTime()) {
+        const inProgressSessions = await prisma.session.findMany({
+            where: {
+                state: {
+                    notIn: ['COMPLETED', 'CANCELLED']
+                }
+            }
+        });
+
+        // complete all in progress sessions
+        for (const session of inProgressSessions) {
+            await prisma.session.update({
+                where: {
+                    id: session.id
+                },
+                data: {
+                    state: 'COMPLETED',
+                    leftAt: now,
+                    lastUpdate: now,
+                    elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime())
+
+                }
+            });
+        }
+    }
+}, minutes(1));

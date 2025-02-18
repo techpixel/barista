@@ -2,7 +2,7 @@ import { minutes } from "./config";
 import { whisper } from "./slack/whisper";
 import { prisma } from "./util/prisma";
 
-const endTime = new Date('2025-02-18T00:00:00.000Z');
+const endTime = new Date('2025-02-18T06:00:00.000Z');
 
 export async function isItTime(userId: string): Promise<boolean> {
     const now = new Date();

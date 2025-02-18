@@ -8,6 +8,7 @@ import { Config } from "../config";
 import createSession from '../sessions/create';
 import unpause from "../sessions/unpause";
 import isPaused from "../sessions/isPaused";
+import { isItTime } from "../isItTime";
 
 /*
 
@@ -27,6 +28,10 @@ export default async (args: {
         channel: args.huddle.channel_id,
         type: 'huddle_join'
     });
+
+    if (await isItTime(args.slackId)) {
+        return;
+    } 
 
     // Look if the user has a session that is paused
     // Make sure it's not completed or cancelled

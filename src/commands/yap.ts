@@ -1,4 +1,5 @@
 import { Config } from "../config";
+import { isItTime } from "../isItTime";
 import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
 import { whisper } from "../slack/whisper";
@@ -16,6 +17,10 @@ app.command('/yap', async ({ ack, payload }) => {
         channel: payload.channel_id,
         type: 'slash-command'
     })
+
+    if (await isItTime(payload.user_id)) {
+        return;
+    }  
 
     const session = await prisma.session.findFirst({
         where: {

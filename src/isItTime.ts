@@ -19,7 +19,7 @@ export async function isItTime(userId: string): Promise<boolean> {
     return false;
 }
 
-setTimeout(async () => {
+const x = setTimeout(async () => {
     const now = new Date();
 
     if (now.getTime() > endTime.getTime()) {
@@ -46,5 +46,8 @@ setTimeout(async () => {
                 }
             });
         }
+
+        // stop the interval
+        clearTimeout(x);
     }
 }, minutes(1));

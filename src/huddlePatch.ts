@@ -1,8 +1,8 @@
 import huddleInfo, { grabActiveHuddle, type Huddle } from "./slack/huddleInfo"; 
 import { upsertUser } from "./util/db";
 import { prisma } from "./util/prisma";
-import userJoinedHuddle from "./events/userJoinedHuddle";
-import userLeftHuddle from "./events/userLeftHuddle";
+import userJoinedHuddle from "./huddles/userJoinedHuddle";
+import userLeftHuddle from "./huddles/userLeftHuddle";
 import { minutes } from "./config";
 import { sleep } from "bun";
 

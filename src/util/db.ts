@@ -3,7 +3,7 @@ import { prisma } from "./prisma";
 import { users } from "./airtable";
 import { error } from "../slack/logger";
 
-export async function createUser(slackId: string) {
+export async function createUser(slackId: string): Promise<Prisma.UserCreateInput> {
     console.log("Creating user", slackId);
 
     let airtableUser = await users.create({
@@ -15,7 +15,7 @@ export async function createUser(slackId: string) {
     });
 }
 
-export async function upsertUser(slackId: string, inHuddle: boolean) {
+export async function upsertUser(slackId: string, currentlyInHuddle: boolean): Promise<Prisma.UserGetPayload<{}> | null> {
     try {
         // well we know for a fact that they weren't in the huddle before if we're creating them
         // so let's check if they exist first
@@ -26,8 +26,15 @@ export async function upsertUser(slackId: string, inHuddle: boolean) {
         });
 
         // only create them if they're now in the huddle
-        if (!user && inHuddle) {
-            return await createUser(slackId);
+        if (!user && currentlyInHuddle) {
+            const newUser = await createUser(slackId);
+            if (!newUser) { 
+                throw new Error(`Failed to create user ${slackId}`);
+            }
+            return {
+                ...newUser,
+                inHuddle: false // they weren't in the huddle before
+            };
         } else if (user) {
             return user;
         } else {

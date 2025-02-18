@@ -2,7 +2,7 @@ import type { Session } from "@prisma/client";
 import { prisma } from "./util/prisma";
 import { t } from "./util/transcript";
 import { app } from "./slack/bolt";
-import cancel from "./sessions/cancel";
+import cancel from "./oldsessions/cancel";
 
 import { Config } from "./config";
 import { sendDM } from "./slack/dm";

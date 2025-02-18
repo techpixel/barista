@@ -5,7 +5,7 @@ import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
 import { t } from "../util/transcript";
 
-import addScrap from "../sessions/addScrap";
+import addScrap from "../oldsessions/addScrap";
 
 import { Config } from "../config";
 

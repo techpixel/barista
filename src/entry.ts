@@ -3,19 +3,22 @@ dotenv.config();
 
 import { app } from './slack/bolt';
 
-import './events/huddles';
-import './events/message';
-import './events/memberJoinedChannel';
 import './events/appMention';
 
-import './commands/kick';
-import './commands/hack';
-import './commands/yap';
-import './commands/myCups'; 
-import './commands/huddleInfo';
-import './commands/fixHuddle';
+import './tracking/message';
 
-import './huddlePatch';
+// import './huddles/huddles';
+// import './events/message';
+// import './events/memberJoinedChannel';
+
+// import './commands/kick';
+// import './commands/hack';
+// import './commands/yap';
+// import './commands/myCups'; 
+// import './commands/huddleInfo';
+// import './commands/fixHuddle';
+
+// import './huddlePatch';
 
 import { Config } from './config';
 

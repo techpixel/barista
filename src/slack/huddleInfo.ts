@@ -65,3 +65,11 @@ export function grabActiveHuddle(huddle: Huddle[]): Huddle | undefined {
     }
     return undefined;
 }
+
+export async function activeHuddle(): Promise<Huddle | undefined> {
+    const huddles = await huddleInfo();
+    if (huddles) {
+        return grabActiveHuddle(huddles.huddles);
+    }
+    return undefined;
+}

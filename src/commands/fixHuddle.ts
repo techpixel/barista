@@ -2,8 +2,8 @@ import { app } from "../slack/bolt";
 import huddleInfo, { grabActiveHuddle, grabAllMembers } from "../slack/huddleInfo"; 
 import { upsertUser } from "../util/db";
 import { prisma } from "../util/prisma";
-import userJoinedHuddle from "../events/userJoinedHuddle";
-import userLeftHuddle from "../events/userLeftHuddle";
+import userJoinedHuddle from "../huddles/userJoinedHuddle";
+import userLeftHuddle from "../huddles/userLeftHuddle";
 import { whisper } from "../slack/whisper";
 import { mirrorMessage } from "../slack/logger";
 

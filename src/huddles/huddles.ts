@@ -1,0 +1,69 @@
+import { app } from "../slack/bolt";
+import huddleInfo, { activeHuddle, grabActiveHuddle, grabAllMembers } from "../slack/huddleInfo"; 
+import { upsertUser } from "../util/db";
+import { prisma } from "../util/prisma";
+import userJoinedHuddle from "./userJoinedHuddle";
+import userLeftHuddle from "./userLeftHuddle";
+
+/*
+TODO: use an assumptions based system rather than polling the API for huddle info
+
+we can follow session states + use some sort of polling to determine if a user is in a huddle or not, rather than constantly firing off requests to the slack API
+following `user_huddle_changed` is very unreliable, so we'll use `message` events to determine if a user is in a huddle or not + track time
+*/
+
+app.event('user_huddle_changed', async ({ payload }) => {
+    console.log("Recieved huddle update event");
+
+    const huddle = await activeHuddle();
+
+    if (!huddle) {
+        return;
+    }
+
+    const slackId = payload.user.id;
+    const currentlyInHuddle = huddle.active_members.includes(slackId);
+    const user = await upsertUser(slackId, currentlyInHuddle);
+
+    console.log(`User ${slackId} is in huddle: ${currentlyInHuddle}`);
+
+    if (!user) {
+        return;
+    }
+
+    const wasInHuddle = user.inHuddle;
+
+    // if they weren't in the huddle before but the user joined the huddle, trigger a user joined event
+    if (!wasInHuddle && currentlyInHuddle) {
+        await prisma.user.update({
+            where: {
+                slackId
+            },
+            data: {
+                inHuddle: true
+            }
+        });
+
+        userJoinedHuddle({ 
+            slackId,
+            huddle
+        });
+    } 
+
+    // if they were in the huddle but the user left the huddle, update the call
+    if (wasInHuddle && !currentlyInHuddle) {
+        await prisma.user.update({
+            where: {
+                slackId
+            },
+            data: {
+                inHuddle: false
+            }
+        });
+
+        userLeftHuddle({ 
+            slackId,
+            huddle
+        });
+    }
+});

@@ -3,7 +3,7 @@ import huddleInfo from "../slack/huddleInfo";
 import { whisper } from "../slack/whisper";
 import { prisma } from "../util/prisma";
 import { genProgressBar, t } from "../util/transcript";
-import createSession from "../sessions/create";
+import createSession from "../oldsessions/create";
 import { Config } from "../config";
 import { mirrorMessage } from "../slack/logger";
 import { isItTime } from "../isItTime";

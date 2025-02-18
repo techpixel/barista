@@ -17,3 +17,9 @@ This project was created using `bun init` in bun v1.1.42. [Bun](https://bun.sh) 
 Flow:
 
 userJoinedHuddle.ts -> message.ts
+
+# flow-v2
+
+huddle changes -> send informative messages to the user
+
+message updates -> actually track time

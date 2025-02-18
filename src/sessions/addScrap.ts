@@ -1,18 +1,23 @@
 // Adds a scrap to a session
 
-import type { Session } from "@prisma/client";
+import type { ScrapType, Session } from "@prisma/client";
 import { prisma } from "../util/prisma";
 import { app } from "../slack/bolt";
 import { t } from "../util/transcript";
 
-import complete from "./complete";
+import complete from "../oldsessions/complete";
 import { scraps } from "../util/airtable";
 import type { FileShareMessageEvent } from "@slack/types";
 import type { Attachment } from "airtable";
+import { lifetimeCups, msToCups } from "../util/math";
+import { Config } from "../config";
+import { mirrorMessage } from "../slack/logger";
 
 /*
 
 When we add a scrap to a session, we update the time elapsed on the session and update the lastUpdate field. We also create a new scrap record in the database.
+
+**v2 flow - this function should ONLY create new scraps, not update the session state. that is reserved for the helper functions**
 
 */
 
@@ -22,40 +27,48 @@ export default async (session: Session, scrap: {
     channel: string,
     ts: string,
     user: string,
+    state: ScrapType
 },
 attachments: FileShareMessageEvent['files'] = []
 ) => {
     console.log('adding scrap to session');
 
+    mirrorMessage({
+        message: `Starting session for <@${session.slackId}>`,
+        channel: Config.CAFE_CHANNEL,
+        user: session.slackId,
+        type: 'scrap_send'
+    })
+
     const now = new Date();
 
-    switch (session.state) {
-        // Session hasn't started yet
-        case 'WAITING_FOR_INITAL_SCRAP': 
-            session = await prisma.session.update({
-                where: {
-                    id: session.id
-                },
-                data: {
-                    state: 'SESSION_PENDING',
-                    
-                    lastUpdate: now,
-                    elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()),
-                    
-                    scraps: {
-                        create: {
-                            data: scrap,
-                            type: "INITIAL",
-                            user: {
-                                connect: {
-                                    slackId: scrap.user
-                                }
-                            }
+    session = await prisma.session.update({
+        where: {
+            id: session.id
+        },
+        data: {
+            lastUpdate: now,
+            elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()),
+            
+            scraps: {
+                create: {
+                    data: scrap,
+                    type: scrap.state,
+                    user: {
+                        connect: {
+                            slackId: scrap.user
                         }
                     }
                 }
-            });
+            }
+        }
+    });
 
+    const cups = msToCups(session.elapsed);
+
+    switch (scrap.type) {
+        // Session hasn't started yet
+        case 'INITIAL': 
             await app.client.chat.postMessage({
                 channel: scrap.channel,
                 text: t('logged_goal'),
@@ -64,55 +77,26 @@ attachments: FileShareMessageEvent['files'] = []
             
             break;
         // Session is in progress
-        case 'SESSION_PENDING': 
-            session = await prisma.session.update({
-                where: {
-                    id: session.id
-                },
-                data: {
-                    state: 'SESSION_PENDING',
-                    
-                    lastUpdate: now,
-                    elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()),
-                    
-                    scraps: {
-                        create: {
-                            data: scrap,
-                            type: "IN_PROGRESS",
-                            user: {
-                                connect: {
-                                    slackId: scrap.user
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
+        case 'IN_PROGRESS': 
             await app.client.chat.postMessage({
                 channel: scrap.channel,
                 text: t('logged_scrap', {
-                    cups: (session.elapsed / 1000 / 60 / 60).toFixed(0) // (in hours) // todo: cups calculation function
+                    cups, 
                 }),
                 thread_ts: scrap.ts
             });
 
             break;
         // The session has ended and we're waiting for the user to ship
-        case 'WAITING_FOR_FINAL_SCRAP': 
-            if (!session.leftAt) {
-                throw new Error('Session is in WAITING_FOR_FINAL_SCRAP state but leftAt is null');
-            }
-
+        case 'FINAL': 
             session = await prisma.session.update({
                 where: {
                     id: session.id
                 },
                 data: {
-                    state: 'COMPLETED',
-                    
-                    lastUpdate: session.leftAt,
-                    elapsed: session.elapsed + (now.getTime() - session.leftAt.getTime()),
+                    lastUpdate: now,
+                    leftAt: now,
+                    elapsed: session.elapsed + (now.getTime() - now.getTime()),
 
                     paused: false,
                     
@@ -130,27 +114,11 @@ attachments: FileShareMessageEvent['files'] = []
                 }
             });
 
-            complete(session);
-
-            const lifetimeElapsed = await prisma.session.aggregate({
-                where: {
-                    slackId: session.slackId,
-                    state: 'COMPLETED',                
-                },
-                _sum: {
-                    elapsed: true,
-                }
-            });
-
-            const totalCups = lifetimeElapsed._sum.elapsed ? lifetimeElapsed._sum.elapsed : 0;
-
-            console.log(`session completed. total cups lifetime: ${totalCups / 1000 / 60 / 60} cups`);
-
             await app.client.chat.postMessage({
                 channel: scrap.channel,
                 text: t('finish', {
-                    cups: Math.floor(session.elapsed / 1000 / 60 / 60), // (in hours)
-                    totalCups: Math.floor(totalCups / 1000 / 60 / 60)
+                    cups,
+                    totalCups: lifetimeCups(session.slackId)
                 }),
                 thread_ts: scrap.ts
             });

@@ -6,6 +6,7 @@ import { genProgressBar, t } from "../util/transcript";
 import createSession from "../sessions/create";
 import { Config } from "../config";
 import { mirrorMessage } from "../slack/logger";
+import { isItTime } from "../isItTime";
 
 // pretty much treat this as the user leaving the huddle
 
@@ -19,6 +20,10 @@ app.command('/hack', async ({ ack, payload }) => {
             channel: payload.channel_id,
             type: 'slash-command'
         })
+
+        if (await isItTime(payload.user_id)) {
+            return;
+        }
 
         const session = await prisma.session.findFirst({
             where: {

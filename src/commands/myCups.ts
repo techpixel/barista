@@ -5,6 +5,7 @@ import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
 import { formatHour } from "../util/transcript";
 import { whisper } from "../slack/whisper";
+import { users } from "../util/airtable";
 
 app.command('/my-cups', async ({ ack, payload }) => {
     await ack();
@@ -30,33 +31,32 @@ app.command('/my-cups', async ({ ack, payload }) => {
     }];
 
     try {
-        const lifetimeElapsed = await prisma.session.aggregate({
-            where: {
-                slackId: payload.user_id,
-                state: 'COMPLETED',                
-            },
-            _sum: {
-                elapsed: true,
-            }
-        });
+        // const lifetimeElapsed = await prisma.session.aggregate({
+        //     where: {
+        //         slackId: payload.user_id,
+        //         state: 'COMPLETED',                
+        //     },
+        //     _sum: {
+        //         elapsed: true,
+        //     }
+        // });
 
-        const inProgressElapsed = await prisma.session.aggregate({
-            where: {
-                slackId: payload.user_id,
-                state: {
-                    notIn: ['COMPLETED', 'CANCELLED']
-                }
-            },
-            _sum: {
-                elapsed: true,
-            }
-        });
+        // use airtable to get the user entry
+        const airtableUser = await users.select({
+            filterByFormula: `{Slack ID} = "${payload.user_id}"`
+        }).all();
 
-        if (lifetimeElapsed._sum.elapsed) {
+        console.log(airtableUser);
+
+        const lifetimeElapsed = airtableUser[0].fields['Total Time in Call'];
+
+        console.log(`lifetime elapsed: ${lifetimeElapsed}`)
+
+        if (lifetimeElapsed) {
             // user not in a session rn
 
-            const totalMs = lifetimeElapsed._sum.elapsed;
-            const totalCups = Math.floor(lifetimeElapsed._sum.elapsed / 1000 / 60 / 60); // (in hours)
+            const totalMs = lifetimeElapsed as number;
+            const totalCups = Math.floor(totalMs / 1000 / 60 / 60); // (in hours)
     
             blocks.push({
                 type: 'section',
@@ -67,28 +67,36 @@ app.command('/my-cups', async ({ ack, payload }) => {
             });
 
             console.log(`user has ${totalCups} cups`);
-        }         
-
-        if (inProgressElapsed._sum.elapsed) { 
-            const inProgressMs = inProgressElapsed._sum.elapsed;
-            const inProgressCups = inProgressElapsed._sum.elapsed / 1000 / 60 / 60; // (in hours)
-    
-            blocks.push({
-                type: 'section',
-                text: {
-                    type: 'mrkdwn',
-                    text: `I've poured ${inProgressCups.toFixed(0)} cups in this session!\n(that's ${formatHour(inProgressMs)} hours)`, 
-                }
-            });
         } else {
             blocks.push({
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `You're not in a session right now!`
+                    text: `couldn't find you in airtable!` 
                 }
             });
         }
+
+        // if (inProgressElapsed._sum.elapsed) { 
+        //     const inProgressMs = inProgressElapsed._sum.elapsed;
+        //     const inProgressCups = inProgressElapsed._sum.elapsed / 1000 / 60 / 60; // (in hours)
+    
+        //     blocks.push({
+        //         type: 'section',
+        //         text: {
+        //             type: 'mrkdwn',
+        //             text: `I've poured ${inProgressCups.toFixed(0)} cups in this session!\n(that's ${formatHour(inProgressMs)} hours)`, 
+        //         }
+        //     });
+        // } else {
+        //     blocks.push({
+        //         type: 'section',
+        //         text: {
+        //             type: 'mrkdwn',
+        //             text: `You're not in a session right now!`
+        //         }
+        //     });
+        // }
 
         await app.client.chat.postEphemeral({
             channel: payload.channel_id,

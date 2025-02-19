@@ -48,20 +48,20 @@ app.command('/my-cups', async ({ ack, payload }) => {
 
         console.log(airtableUser);
 
-        const lifetimeElapsed = airtableUser[0].fields['Total Time in Call'] as number; // in minutes
+        const lifetimeElapsed = airtableUser[0].fields['Total Time in Call'] as number; // in seconds
 
         console.log(`lifetime elapsed: ${lifetimeElapsed}`)
 
         if (lifetimeElapsed) {
             // user not in a session rn
 
-            const totalCups = Math.floor(lifetimeElapsed/ 60);
+            const totalCups = Math.floor(lifetimeElapsed/60/60); // in hours
     
             blocks.push({
                 type: 'section',
                 text: {
                     type: 'mrkdwn',
-                    text: `You have ${totalCups} _total_ cups!\n(that's ${(lifetimeElapsed/60).toFixed(2)} hours)`
+                    text: `You have ${totalCups} _total_ cups!\n(that's ${(lifetimeElapsed/60/60).toFixed(2)} hours)`
                 }
             });
 

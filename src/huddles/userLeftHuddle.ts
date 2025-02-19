@@ -4,6 +4,7 @@ import { mirrorMessage } from "../slack/logger";
 import type { Huddle } from "../slack/huddleInfo";
 import { t } from "../util/transcript";
 import { Config } from "../config";
+import { sendDM } from "../slack/dm";
 
 /*
 
@@ -13,17 +14,17 @@ User leaves call -> bot reminds user to ship
 
 export default async (args: {
     slackId: string,
-    huddle: Huddle
 }) => {
+    console.log(`User ${args.slackId} left the huddle`); 
+
     mirrorMessage({
         message: `${args.slackId} left the huddle`,
         user: args.slackId,
-        channel: args.huddle.channel_id,
+        channel: Config.CAFE_CHANNEL,
         type: 'huddle_left'
     });    
 
-    await app.client.chat.postEphemeral({
-        channel: Config.CAFE_CHANNEL,
+    sendDM({
         user: args.slackId,
         text: t('huddle_left', {
             slackId: args.slackId

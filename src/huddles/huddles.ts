@@ -1,5 +1,6 @@
+import { minutes } from "../util/math";
 import { app } from "../slack/bolt";
-import huddleInfo, { activeHuddle, grabActiveHuddle, grabAllMembers } from "../slack/huddleInfo"; 
+import huddleInfo, { activeHuddle, activeMembers, grabActiveHuddle, grabAllMembers, type Huddle } from "../slack/huddleInfo"; 
 import { upsertUser } from "../util/db";
 import { prisma } from "../util/prisma";
 import userJoinedHuddle from "./userJoinedHuddle";
@@ -12,26 +13,26 @@ we can follow session states + use some sort of polling to determine if a user i
 following `user_huddle_changed` is very unreliable, so we'll use `message` events to determine if a user is in a huddle or not + track time
 */
 
-app.event('user_huddle_changed', async ({ payload }) => {
-    console.log("Recieved huddle update event");
+export const huddleCheck = async ({
+    slackId,    
+    huddle
+}: {
+    slackId: string,
+    huddle?: Huddle
+}) => {
+    console.log(`Checking huddle status for ${slackId}`);
 
-    const huddle = await activeHuddle();
-
-    if (!huddle) {
-        return;
-    }
-
-    const slackId = payload.user.id;
-    const currentlyInHuddle = huddle.active_members.includes(slackId);
+    const currentlyInHuddle = huddle ? huddle.active_members.includes(slackId) : false;
     const user = await upsertUser(slackId, currentlyInHuddle);
 
-    console.log(`User ${slackId} is in huddle: ${currentlyInHuddle}`);
-
     if (!user) {
+        console.log(`User ${slackId} not found in database`);
         return;
     }
 
     const wasInHuddle = user.inHuddle;
+
+    console.log(`User ${slackId} was ${wasInHuddle ? '' : 'not '}in huddle, now ${currentlyInHuddle ? '' : 'not '}in huddle`);
 
     // if they weren't in the huddle before but the user joined the huddle, trigger a user joined event
     if (!wasInHuddle && currentlyInHuddle) {
@@ -46,7 +47,6 @@ app.event('user_huddle_changed', async ({ payload }) => {
 
         userJoinedHuddle({ 
             slackId,
-            huddle
         });
     } 
 
@@ -63,7 +63,14 @@ app.event('user_huddle_changed', async ({ payload }) => {
 
         userLeftHuddle({ 
             slackId,
-            huddle
         });
     }
+}
+
+app.event('user_huddle_changed', async ({ payload }) => {
+    await huddleCheck({
+        slackId: payload.user.id,
+    });
 });
+
+import './poll';

@@ -12,7 +12,7 @@
     "start": "bun run ./src/entry.ts"
   },
   "dependencies": {
-    "@prisma/client": "6.3.0",
+    "@prisma/client": "^6.4.0",
     "@slack/bolt": "^4.2.0",
     "@slack/types": "^2.14.0",
     "@types/express": "^5.0.0",

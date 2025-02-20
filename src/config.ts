@@ -1,9 +1,7 @@
-export const minutes = (minutes: number) => {
-    return minutes * 60 * 1000; // --> milliseconds
-}
+import { minutes } from "./util/math"
 
 export const Config = {
-    CAFE_CHANNEL: 'C02A74Z7G7L',
+    CAFE_CHANNEL: 'C08B55UP0T0',
     LOGS_CHANNEL: 'C08BTE4991P',
 
     CLEANUP_INTERVAL: minutes(5), // every 5 minutes

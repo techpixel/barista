@@ -73,3 +73,18 @@ export async function activeHuddle(): Promise<Huddle | undefined> {
     }
     return undefined;
 }
+
+export async function activeMembers(): Promise<string[]> { 
+    const huddle = await activeHuddle();
+    if (huddle) {
+        return huddle.active_members;
+    }
+    return [];
+}
+
+export function allMembers(huddle: Huddle | undefined): string[] {
+    if (huddle) {
+        return huddle.active_members;
+    }
+    return [];
+}

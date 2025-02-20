@@ -10,12 +10,12 @@ import start from "../sessions/start";
 import end from "../sessions/end";
 
 app.event('message', async ({ event, client }) => {
-    console.log("Recieved scrap update");
-
     if (
         event.subtype === 'file_share' // User shared a photo
         || event.subtype === undefined // User sent a goal
     ) {
+        console.log("Recieved scrap update");
+
         const huddle = await activeHuddle();
 
         if (!huddle) {

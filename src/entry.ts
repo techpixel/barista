@@ -7,6 +7,8 @@ import './events/appMention';
 
 import './tracking/message';
 
+import './huddles/huddles';
+
 // import './huddles/huddles';
 // import './events/message';
 // import './events/memberJoinedChannel';

@@ -50,5 +50,10 @@ export default async (args: {
                 slackId: args.slackId
             })
         });
+    } else {
+        whisper({
+            user: args.slackId,
+            text: 'you left the huddle!'
+        });
     }
 }

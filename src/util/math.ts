@@ -25,3 +25,7 @@ export async function lifetimeCups(slackId: string): Promise<number> {
 export function minutes(min: number): number {
     return min * 60 * 1000;
 }
+
+export function msToSeconds(ms: number): number {
+    return Math.floor(ms / 1000);
+}

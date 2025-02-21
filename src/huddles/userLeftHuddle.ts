@@ -1,10 +1,10 @@
-import { prisma } from "../util/prisma";
-import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
-import type { Huddle } from "../slack/huddleInfo";
 import { t } from "../util/transcript";
 import { Config } from "../config";
-import { sendDM } from "../slack/dm";
+import state from "../sessions/state";
+import { whisper } from "../slack/whisper";
+import { prisma } from "../util/prisma";
+import current from "../sessions/current";
 
 /*
 
@@ -24,10 +24,31 @@ export default async (args: {
         type: 'huddle_left'
     });    
 
-    sendDM({
-        user: args.slackId,
-        text: t('huddle_left', {
-            slackId: args.slackId
-        })
-    })
+    const session = await current({ slackId: args.slackId })
+
+    if (!session) { return; }
+
+    if (session.state === 'SESSION_PENDING') {
+        const now = new Date();
+
+        await prisma.session.update({
+            where: {
+                id: session.id
+            },
+            data: {
+                state: 'WAITING_FOR_FINAL_SCRAP',
+                leftAt: now,
+                lastUpdate: now,
+                // elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()), - do not update the time if the user goes afk
+                paused: true
+            }
+        });
+
+        whisper({
+            user: args.slackId,
+            text: t('huddle_left', {
+                slackId: args.slackId
+            })
+        });
+    }
 }

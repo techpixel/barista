@@ -37,7 +37,11 @@ export default function huddleInfo(): Promise<{ huddles: Huddle[] } | undefined>
         body,
         redirect: "follow"
       })
-      .then((response) => response.json())
+      .then((response) => {
+        const x = response.json()
+        x.then((data) => { console.log(data) })
+        return x;
+    })
       .catch((error) => {
         mirrorMessage({
             channel: Config.LOGS_CHANNEL,

@@ -3,6 +3,9 @@ import { t } from "../util/transcript";
 import { Config } from "../config";
 
 import { whisper } from "../slack/whisper";
+import { prisma } from "../util/prisma";
+import start from "../sessions/start";
+import state from "../sessions/state";
 
 /*
 
@@ -12,6 +15,7 @@ User joins call -> bot asks user to post goal/scrap
 
 export default async (args: {
     slackId: string,
+    callId: string
 }) => {
     console.log(`User ${args.slackId} joined the huddle`);
 
@@ -22,11 +26,45 @@ export default async (args: {
         type: 'huddle_join'
     });
 
-    whisper({
-        channel: Config.CAFE_CHANNEL,
-        user: args.slackId,
-        text: t('huddle_join')
-    });
+    const sessionState = await state({ slackId: args.slackId });
 
-    console.log(`bot asked what they're working on`)
+    if (sessionState === 'PAUSED_SESSION') {
+        // unpause the session
+        await prisma.session.updateMany({
+            where: {
+                state: 'WAITING_FOR_FINAL_SCRAP',
+                paused: true,
+                leftAt: {
+                    not: null
+                },
+                slackId: args.slackId,
+            },
+            data: {
+                state: 'SESSION_PENDING',
+                paused: false,
+                leftAt: null,
+                lastUpdate: new Date(),
+            }
+        });
+
+        whisper({
+            channel: Config.CAFE_CHANNEL,
+            user: args.slackId,
+            text: 'welcome back! i\'ve unpaused your session'
+        });
+    } else if (sessionState === 'NOT_IN_SESSION') {
+        await start({
+            slackId: args.slackId,
+            callId: args.callId
+        })
+    
+        console.log(`bot asked what they're working on`)
+
+
+        whisper({
+            channel: Config.CAFE_CHANNEL,
+            user: args.slackId,
+            text: t('huddle_join')
+        });
+    }
 }

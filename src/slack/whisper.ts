@@ -14,7 +14,7 @@ export async function whisper(args: {
 			"elements": [
 				{
 					"type": "mrkdwn",
-					"text": "_psst..._"
+					"text": `_psst..._ <@${args.user}>`
 				}
 			]
 		},

@@ -2,14 +2,16 @@
 
 import type { Session } from "@prisma/client";
 import { sessions } from "../util/airtable";
+import { msToSeconds } from "../util/math";
 
 export default async (session: Session) => {
-    // todo
     console.log('session is completed and needs to go into airtable');
+    
+    const now = new Date();
 
     await sessions.update(session.airtableRecId, {
-        "Left At": new Date().toISOString(),
+        "Left At": now.toISOString(),
         "State": "COMPLETED",
-        "Elapsed": Math.floor((new Date().getTime() - session.joinedAt.getTime()) / 1000)
+        "Elapsed": msToSeconds(session.elapsed + (now.getTime() - session.lastUpdate.getTime()))
     });
 }

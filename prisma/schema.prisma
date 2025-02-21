@@ -24,25 +24,30 @@ model Session {
   elapsed       Float     @default(0)
   lastUpdate    DateTime
   paused        Boolean   @default(false)
-  state         State     @default(UNINITIALIZED)
+  state         State     
   airtableRecId String    @unique
   scraps        Scrap[]
   user          User      @relation(fields: [slackId], references: [slackId])
 }
 
 model Scrap {
-  id        String    @id @default(uuid())
-  sessionId String
-  slackId   String
-  shipTime  DateTime  @default(now())
-  type      ScrapType
-  data      Json
-  session   Session   @relation(fields: [sessionId], references: [id])
   user      User      @relation(fields: [slackId], references: [slackId])
+  slackId   String
+
+  session   Session   @relation(fields: [sessionId], references: [id])
+  sessionId String
+
+  id        String    @id @default(uuid())
+
+  state     ScrapState
+  type      String
+  createdAt DateTime 
+  ts        String
+  text      String
+  files     String[] // list of file IDs  
 }
 
 enum State {
-  UNINITIALIZED
   WAITING_FOR_INITAL_SCRAP
   SESSION_PENDING
   WAITING_FOR_FINAL_SCRAP
@@ -50,7 +55,7 @@ enum State {
   CANCELLED
 }
 
-enum ScrapType {
+enum ScrapState {
   INITIAL
   IN_PROGRESS
   FINAL

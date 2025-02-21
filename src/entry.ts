@@ -3,11 +3,15 @@ dotenv.config();
 
 import { app } from './slack/bolt';
 
+import './events/memberJoinedChannel';
 import './events/appMention';
 
-import './tracking/message';
-
 import './huddles/huddles';
+import './huddles/poll';
+import './huddles/afk';
+
+import './scraps/message';
+
 
 // import './huddles/huddles';
 // import './events/message';

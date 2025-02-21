@@ -1,6 +1,5 @@
 /*
-Modified `create` function which starts the session
-skips the wait for inital scrap state assuming that we have the inital scrap
+Starts the session
 */
 
 import { Config } from "../config";
@@ -37,7 +36,7 @@ export default async (args: {
         "User": [user.airtableRecId],
         "Call ID": args.callId,
         "Joined At": now.toISOString(),
-        "State": "SESSION_PENDING"
+        "State": "WAITING_FOR_INITAL_SCRAP"
     });
 
     return await prisma.session.create({
@@ -47,7 +46,7 @@ export default async (args: {
             callId: args.callId,
             joinedAt: now,
             lastUpdate: now,
-            state: 'SESSION_PENDING',
+            state: 'WAITING_FOR_INITAL_SCRAP',
             airtableRecId: airtableSession.id
         }
     });

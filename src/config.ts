@@ -7,7 +7,7 @@ export const Config = {
     CLEANUP_INTERVAL: minutes(5), // every 5 minutes
 
     AFTER_JOIN_TIMEOUT: minutes(10), // 10 minutes
-    PAUSE_TIMEOUT: minutes(20), // 30 minutes 
+    PAUSE_TIMEOUT: minutes(1),// minutes(20), // 30 minutes 
 
     // this triggers the first reminder after a set number of minutes
     FIRST_REMINDER: minutes(45), // 45 minutes

@@ -1,9 +1,10 @@
+import { Intervals } from "../config";
 import { activeHuddle, allMembers, grabAllMembers } from "../slack/huddleInfo";
 import { minutes } from "../util/math";
 import { prisma } from "../util/prisma";
 import { huddleCheck } from "./huddles";
 
-setInterval(async () => {
+const checkHuddleLeaves = async () => {
     const inHuddle = await prisma.user.findMany({
         where: {
             inHuddle: true
@@ -19,9 +20,9 @@ setInterval(async () => {
             slackId: user.slackId,
         });
     }
-}, minutes(0.1));
+};
 
-setInterval(async () => {
+const checkHuddleJoins = async () => {
     const huddle = await activeHuddle();
        
     let activeMembers: string[] = allMembers(huddle);
@@ -36,4 +37,7 @@ setInterval(async () => {
             slackId: member,
         });
     }
-}, minutes(0.1));
+}
+
+setInterval(checkHuddleLeaves, Intervals.HUDDLE_CHECK);
+setInterval(checkHuddleJoins, Intervals.HUDDLE_CHECK);

@@ -3,6 +3,9 @@ import { upsertUser } from "../util/db";
 import { prisma } from "../util/prisma";
 import userJoinedHuddle from "./userJoinedHuddle";
 import userLeftHuddle from "./userLeftHuddle";
+import './poll';
+import { activeHuddle, type Huddle } from "../slack/huddleInfo";
+import AsyncLock from "async-lock";
 
 /*
 TODO: use an assumptions based system rather than polling the API for huddle info
@@ -91,7 +94,3 @@ app.event('user_huddle_changed', async ({ payload }) => {
         slackId: payload.user.id,
     });
 });
-
-import './poll';
-import { activeHuddle, type Huddle } from "../slack/huddleInfo";import AsyncLock from "async-lock";
-

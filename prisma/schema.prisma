@@ -28,6 +28,7 @@ model Session {
   airtableRecId String    @unique
   scraps        Scrap[]
   user          User      @relation(fields: [slackId], references: [slackId])
+  lastReminded  DateTime? @default(now())
 }
 
 model Scrap {

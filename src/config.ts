@@ -3,15 +3,17 @@ import { minutes } from "./util/math"
 export const Config = {
     CAFE_CHANNEL: 'C08B55UP0T0',
     LOGS_CHANNEL: 'C08BTE4991P',
+}
 
-    CLEANUP_INTERVAL: minutes(5), // every 5 minutes
+export const Intervals = {
+    PAUSE_CHECK: minutes(1),
+    PAUSE_TIMEOUT: minutes(10),
 
-    AFTER_JOIN_TIMEOUT: minutes(10), // 10 minutes
-    PAUSE_TIMEOUT: minutes(1),// minutes(20), // 30 minutes 
+    KICK_CHECK: minutes(5),
+    KICK_AFTER: minutes(10),
 
-    // this triggers the first reminder after a set number of minutes
-    FIRST_REMINDER: minutes(45), // 45 minutes
-    REMINDER_INTERVAL: minutes(30), // 30 minutes
+    REMINDER_CHECK: minutes(5),
+    REMIND_AFTER: minutes(45),
 
-    AFK_TIMEOUT: minutes(60), // 1 hour
+    HUDDLE_CHECK: minutes(1),
 }

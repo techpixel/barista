@@ -5,6 +5,7 @@ import state from "../sessions/state";
 import { whisper } from "../slack/whisper";
 import { prisma } from "../util/prisma";
 import current from "../sessions/current";
+import cancel from "../sessions/cancel";
 
 /*
 
@@ -28,7 +29,15 @@ export default async (args: {
 
     if (!session) { return; }
 
-    if (session.state === 'SESSION_PENDING') {
+    if (session.state === 'WAITING_FOR_INITAL_SCRAP') {
+        // delete if there's no scrap
+        await cancel(session);
+        
+        whisper({
+            user: args.slackId,
+            text: 'you left the huddle!'
+        });
+    } else if (session.state === 'SESSION_PENDING') {
         const now = new Date();
 
         await prisma.session.update({

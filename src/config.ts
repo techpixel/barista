@@ -1,7 +1,7 @@
 import { minutes } from "./util/math"
 
 export const Config = {
-    CAFE_CHANNEL: 'C08B55UP0T0',
+    CAFE_CHANNEL: 'C02A74Z7G7L',
     LOGS_CHANNEL: 'C08BTE4991P',
     BULLETIN_CHANNEL: 'C08CD0F2QBV',
 }

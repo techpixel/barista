@@ -9,22 +9,13 @@ import './events/appMention';
 import './huddles/huddles';
 import './huddles/poll';
 import './huddles/afk';
+import './commands/cups';
+
+import './commands/board';
+import './commands/cups';
+import './commands/help';
 
 import './scraps/message';
-
-
-// import './huddles/huddles';
-// import './events/message';
-// import './events/memberJoinedChannel';
-
-// import './commands/kick';
-// import './commands/hack';
-// import './commands/yap';
-// import './commands/myCups'; 
-// import './commands/huddleInfo';
-// import './commands/fixHuddle';
-
-// import './huddlePatch';
 
 import { Config } from './config';
 

@@ -1,13 +1,5 @@
 import { prisma } from "./prisma";
 
-export function msToCups(ms: number): number {
-    return Math.floor(ms / 1000 / 60 / 60);
-}
-
-export function msFormattedHours(ms: number): string {
-    return (ms / 1000 / 60 / 60).toFixed(2);
-}
-
 export async function lifetimeCups(slackId: string): Promise<number> {
     const lifetimeElapsed = await prisma.session.aggregate({
         where: {
@@ -28,4 +20,16 @@ export function minutes(min: number): number {
 
 export function msToSeconds(ms: number): number {
     return Math.floor(ms / 1000);
+}
+
+export function msToMinutes(ms: number): number {
+    return Math.floor(ms / 1000 / 60);
+}
+
+export function msToCups(ms: number): number {
+    return Math.floor(ms / 1000 / 60 / 60);
+}
+
+export function msToFormattedHours(ms: number): string {
+    return (ms / 1000 / 60 / 60).toFixed(2);
 }

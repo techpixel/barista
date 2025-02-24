@@ -88,34 +88,6 @@ templates:
 
       if you're here to yap, that's fine too, just remember to use /yap when you're on, so that it doesn't track your time!!
 
-  hack_initial_scrap:
-    - |
-      *make sure to tell everyone about what you're working on!* i'll start brewin' up your cup right after :3
-
-      say something like:
-      ```
-      i'm hacking on ________!! (fill in the blank)
-      ```
-
-      for example:
-      ```
-      i'm making the text boxes on my personal site draggable!
-      i'm working on the schematic of my rubber ducky pcb :3
-      i'm starting a slack bot that tracks time!!
-      ```
-      you can also send images with the message of what you're working on!
-
-      feel free to also send messages in this channel normally after, for example:
-      • progress updates! huge breakthroughs and cool demos are more than welcome!
-      • questions and asking for technical help! at the cafe, we're all here to help :D
-  hack_final_scrap:
-    - | 
-      it's time to make a ship post of what you've done in the session :rac_woah: 
-
-      *post in channel what you've done while on huddle, with an attached image!*
-      
-      you _must_ make a ship post, or none of the time you just huddled for will be counted! 
-
   yap_no_scrap:
     - |
       just chilling? that's fine!
@@ -130,3 +102,53 @@ templates:
 
       otherwise, feel free to stay and yap with us :3
   
+
+  help:
+    no_session:
+      header: 
+        - "it seems like you're not in a session!"
+      text:
+        - "to start a session, join the huddle!"
+    inital_scrap:
+      header:
+        - "i'm waiting for your first scrap! let me give you the rundown again:"
+      text:
+        - |
+          *make sure to tell everyone about what you're working on!* i'll start brewin' up your cup right after :3
+
+          say something like:
+          ```
+          i'm hacking on ________!! (fill in the blank)
+          ```
+
+          for example:
+          ```
+          i'm making the text boxes on my personal site draggable!
+          i'm working on the schematic of my rubber ducky pcb :3
+          i'm starting a slack bot that tracks time!!
+          ```
+          you can also send images with the message of what you're working on!
+
+          feel free to also send messages in this channel normally after, for example:
+          • progress updates! huge breakthroughs and cool demos are more than welcome!
+          • questions and asking for technical help! at the cafe, we're all here to help :D
+    session_pending:
+      header:
+        - "you're currently in a session!"
+      text:
+        - "while you're in a session, make sure to post scraps (images!) of what you're working on every hour! after you leave, make sure to ship what you've done in the session with an image attached!"
+    final_scrap:
+      header:
+        - "i'm waiting for your final scrap! let me give you the rundown again:"
+      text:
+        - | 
+          it's time to make a ship post of what you've done in the session :rac_woah: 
+
+          *post in channel what you've done while on huddle, with an attached image!*
+          
+          you _must_ make a ship post, or none of the time you just huddled for will be counted! 
+    unknown_state:
+      header:
+        - "something went wrong"
+      text:
+        - "i'm a little slow rn *twitch twitch* try again in a bit"

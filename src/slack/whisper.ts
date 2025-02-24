@@ -1,6 +1,7 @@
 import type { AnyBlock } from "@slack/types";
 import { Config } from "../config";
 import { app } from "./bolt"; 
+import { t } from "../util/transcript";
 
 export async function whisper(args: {
     user: string,
@@ -40,7 +41,15 @@ export async function whisper(args: {
             "type": "mrkdwn",
             "text": args.text
         }
-    });
+    }, {
+        "type": "context",
+        "elements": [
+            {
+                "type": "mrkdwn",
+                "text": t('tip')
+            }
+        ]
+    },);
 
     await app.client.chat.postEphemeral({
         channel: args.channel || Config.CAFE_CHANNEL,

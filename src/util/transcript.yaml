@@ -21,6 +21,15 @@ templates:
       feel free to also send messages in this channel normally after, for example:
       • progress updates! huge breakthroughs and cool demos are more than welcome!
       • questions and asking for technical help! at the cafe, we're all here to help :D 
+  huddle_left:
+    - |
+      <@${slackId}> leaving? that means it's time to make a ship post of what you've done in the session :rac_woah: 
+
+      *post in channel what you've done while on huddle, with an attached image!*
+      
+      if you accidentally left, join back the huddle in the next 10 minutes for me to resume your time :rac_wtf: 
+      you _must_ make a ship post, or none of the time you just huddled for will be counted! 
+
   logged_goal:
     - "nice! i've logged your goal for today! keep me updated on your progress :3"
   logged_scrap:
@@ -30,21 +39,15 @@ templates:
     - "that looks so fun!! i'd be making too if i wasn't on the job :rac_pf:"
     - "you're currently on you ${cups} cup today!"
 #    - "_twitch_ that's more cups my raccoon head could take,, you sure this is safe??" #todo if [numberth] > 5:
-  huddle_left:
-    - |
-      <@${slackId}> leaving? that means it's time to make a ship post of what you've done in the session :rac_woah: 
-
-      *post in channel what you've done while on huddle, with an attached image!*
-      
-      if you accidentally left, join back the huddle in the next 10 minutes for me to resume your time :rac_wtf: 
-      you _must_ make a ship post, or none of the time you just huddled for will be counted! 
   finish:
     - |
       leaving the cafe?? i hope you enjoyed it!!
       you've drank ${cups} cups this session, which puts you at a grand total of number ${totalCups} :rac_woah:
       come back again for more!! :rac_shy:
+
   tip:
-    - "pssst... you can run `/yap` if you're done early and just wanna yap"
+    - "pssst... unsure of what to do? run `/cafe-help`!"
+
   joined_channel:
     - |
       `twitch,, twitch!!` welcome to the #cafe!!
@@ -62,6 +65,7 @@ templates:
       want to just join the huddle and yap? use the `/yap` command to do so, once you join the huddle! 
 
       that's it! if you have any questions, feel free to post them in this channel :rac_shy: enjoy your stay!!
+
   inactivity:
     - "it's been 10 minutes since you've joined! since you didn't post your inital scrap, i thought you were inactive, so i stopped tracking your time! rejoin and try again."
 

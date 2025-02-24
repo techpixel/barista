@@ -1,8 +1,8 @@
 -- CreateEnum
-CREATE TYPE "State" AS ENUM ('UNINITIALIZED', 'WAITING_FOR_INITAL_SCRAP', 'SESSION_PENDING', 'WAITING_FOR_FINAL_SCRAP', 'COMPLETED', 'CANCELLED');
+CREATE TYPE "State" AS ENUM ('WAITING_FOR_INITAL_SCRAP', 'SESSION_PENDING', 'WAITING_FOR_FINAL_SCRAP', 'COMPLETED', 'CANCELLED');
 
 -- CreateEnum
-CREATE TYPE "ScrapType" AS ENUM ('INITIAL', 'IN_PROGRESS', 'FINAL');
+CREATE TYPE "ScrapState" AS ENUM ('INITIAL', 'IN_PROGRESS', 'FINAL');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -23,20 +23,24 @@ CREATE TABLE "Session" (
     "elapsed" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "lastUpdate" TIMESTAMP(3) NOT NULL,
     "paused" BOOLEAN NOT NULL DEFAULT false,
-    "state" "State" NOT NULL DEFAULT 'UNINITIALIZED',
+    "state" "State" NOT NULL,
     "airtableRecId" TEXT NOT NULL,
+    "lastReminded" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Scrap" (
-    "id" TEXT NOT NULL,
-    "sessionId" TEXT NOT NULL,
     "slackId" TEXT NOT NULL,
-    "shipTime" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "type" "ScrapType" NOT NULL,
-    "data" JSONB NOT NULL,
+    "sessionId" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
+    "state" "ScrapState" NOT NULL,
+    "type" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
+    "ts" TEXT NOT NULL,
+    "text" TEXT NOT NULL,
+    "files" TEXT[],
 
     CONSTRAINT "Scrap_pkey" PRIMARY KEY ("id")
 );
@@ -51,8 +55,8 @@ CREATE UNIQUE INDEX "Session_airtableRecId_key" ON "Session"("airtableRecId");
 ALTER TABLE "Session" ADD CONSTRAINT "Session_slackId_fkey" FOREIGN KEY ("slackId") REFERENCES "User"("slackId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Scrap" ADD CONSTRAINT "Scrap_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "Session"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Scrap" ADD CONSTRAINT "Scrap_slackId_fkey" FOREIGN KEY ("slackId") REFERENCES "User"("slackId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Scrap" ADD CONSTRAINT "Scrap_slackId_fkey" FOREIGN KEY ("slackId") REFERENCES "User"("slackId") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Scrap" ADD CONSTRAINT "Scrap_sessionId_fkey" FOREIGN KEY ("sessionId") REFERENCES "Session"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 

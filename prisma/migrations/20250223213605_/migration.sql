@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Session" ADD COLUMN     "lastReminded" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP;

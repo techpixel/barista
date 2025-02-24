@@ -3,6 +3,7 @@ import { minutes } from "./util/math"
 export const Config = {
     CAFE_CHANNEL: 'C08B55UP0T0',
     LOGS_CHANNEL: 'C08BTE4991P',
+    BULLETIN_CHANNEL: 'C08CD0F2QBV',
 }
 
 export const Intervals = {
@@ -25,5 +26,5 @@ export const Commands = process.env.DEV ? {
 }: {
     CUPS: '/cups',
     BOARD: '/board',
-    HELP: '/help',
+    HELP: '/cafe-help',
 }

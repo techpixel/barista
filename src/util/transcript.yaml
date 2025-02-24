@@ -92,19 +92,20 @@ templates:
 
       if you're here to yap, that's fine too, just remember to use /yap when you're on, so that it doesn't track your time!!
 
-  yap_no_scrap:
-    - |
-      just chilling? that's fine!
-      i stopped tracking your time, but if you wanna start hacking again while on call, run `/hack`!
+  yap:
+    no_scrap:
+      - |
+        just chilling? that's fine!
+        i stopped tracking your time, but if you wanna start hacking again while on call, run `/hack`!
 
-  yap_final_scrap:
-    - |
-      seems like you're done with hacking! 
+    final_scrap:
+      - |
+        seems like you're done with hacking! 
 
-      make a ship post of what you've done in the session :rac_woah: and i'll count your time!
-      *make sure you attach an image to your ship!*
+        make a ship post of what you've done in the session :rac_woah: and i'll count your time!
+        *make sure you attach an image to your ship!*
 
-      otherwise, feel free to stay and yap with us :3
+        otherwise, feel free to stay and yap with us :3
   
 
   help:

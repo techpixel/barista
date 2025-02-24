@@ -4,7 +4,7 @@ import { prisma } from "../util/prisma";
 import { sessions } from "../util/airtable";
 import { msToSeconds } from "../util/math";
 
-export default async (session: Session) => {
+export default async (session: Session, cancelReason?: string) => {
     const now = new Date();
 
     // turn the last scrap into a final scrap
@@ -35,7 +35,8 @@ export default async (session: Session) => {
         await sessions.update(session.airtableRecId, {
             "Left At": session.lastUpdate.toISOString(),
             "State": "CANCELLED",
-            "Elapsed": msToSeconds(session.elapsed)
+            "Elapsed": msToSeconds(session.elapsed),
+            "Cancel Reason": cancelReason
         });
     }
     // if there is a last scrap, let's consider it a final scrap. but do not update the time
@@ -54,7 +55,8 @@ export default async (session: Session) => {
         await sessions.update(session.airtableRecId, {
             "Left At": lastScrap.createdAt.toISOString(),
             "State": "COMPLETED",
-            "Elapsed": msToSeconds(session.elapsed)
+            "Elapsed": msToSeconds(session.elapsed),
+            "Cancel Reason": cancelReason ? cancelReason + " (completed)" : undefined
         });
     }
 }

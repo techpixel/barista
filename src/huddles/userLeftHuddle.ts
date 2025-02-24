@@ -31,7 +31,7 @@ export default async (args: {
 
     if (session.state === 'WAITING_FOR_INITAL_SCRAP') {
         // delete if there's no scrap
-        await cancel(session);
+        await cancel(session, "left without posting goal");
         
         whisper({
             user: args.slackId,

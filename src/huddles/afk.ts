@@ -46,7 +46,7 @@ const pauseJob = async () => {
             // End the session
             // todo: do I consider it cancelled or completed? how do i treat it - does it count or not?
             // for now, just complete it and move on
-            await cancel(session);
+            await cancel(session, "did not post final ship");
 
             i++;
         }
@@ -86,7 +86,7 @@ const kickJob = async () => {
                 })
             });
 
-            await cancel(session);
+            await cancel(session, "went afk");
 
             i++;
         }

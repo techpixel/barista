@@ -47,7 +47,7 @@ export default async (args: {
             data: {
                 state: 'WAITING_FOR_FINAL_SCRAP',
                 leftAt: now,
-                lastUpdate: now,
+                // lastUpdate: now,
                 // elapsed: session.elapsed + (now.getTime() - session.lastUpdate.getTime()), - do not update the time if the user goes afk
                 paused: true
             }

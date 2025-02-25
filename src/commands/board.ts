@@ -72,7 +72,11 @@ app.command('/board', async ({ ack, payload }) => {
     }];
 
     for (const session of sessions) {
-        blocks.push(		{
+        if (session.scraps.length === 0) {
+            continue;
+        }
+
+        blocks.push({
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",

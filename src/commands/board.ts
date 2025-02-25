@@ -22,7 +22,6 @@ app.command('/board', async ({ ack, payload }) => {
 
     const sessions = await prisma.session.findMany({
         where: {
-            slackId: payload.user_id,
             state: {
                 notIn: ['COMPLETED', 'CANCELLED']
             }

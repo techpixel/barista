@@ -7,7 +7,8 @@ export async function whisper(args: {
     user: string,
     text: string,
     channel?: string,
-    header?: string
+    header?: string,
+    image?: string
 }) {
     const blocks: AnyBlock[] = [
         {
@@ -41,7 +42,17 @@ export async function whisper(args: {
             "type": "mrkdwn",
             "text": args.text
         }
-    }, {
+    });
+
+    if (args.image) {
+        blocks.push({
+            "type": "image",
+            "image_url": args.image,
+            "alt_text": "image"
+        });
+    }
+
+    blocks.push({
         "type": "context",
         "elements": [
             {
@@ -49,7 +60,7 @@ export async function whisper(args: {
                 "text": t('tip')
             }
         ]
-    },);
+    })
 
     await app.client.chat.postEphemeral({
         channel: args.channel || Config.CAFE_CHANNEL,

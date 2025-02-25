@@ -29,31 +29,36 @@ app.command(Commands.HELP, async ({ ack, payload }) => {
             await whisper({
                 user: payload.user_id,
                 header: t('help.no_session.header'),
-                text: t('help.no_session.text')
+                text: t('help.no_session.text'),
+                image: t('flow_img')
             })
         } else if (session.state === 'WAITING_FOR_INITAL_SCRAP') {
             await whisper({
                 user: payload.user_id,
                 header: t('help.initial_scrap.header'),
-                text: t('help.initial_scrap.text')
+                text: t('help.initial_scrap.text'),
+                image: t('flow_img')
             })
         } else if (session.state === 'SESSION_PENDING') {
             await whisper({
                 user: payload.user_id,
                 header: t('help.session_pending.header'),
-                text: t('help.session_pending.text')
+                text: t('help.session_pending.text'),
+                image: t('flow_img')
             })
         } else if (session.state === 'WAITING_FOR_FINAL_SCRAP') {
             await whisper({
                 user: payload.user_id,
                 header: t('help.final_scrap.header'),
-                text: t('help.final_scrap.text')
+                text: t('help.final_scrap.text'),
+                image: t('flow_img')
             })
         } else {
             await whisper({
                 user: payload.user_id,
                 header: t('help.unknown_state.header'),
-                text: t('help.unknown_state.text')
+                text: t('help.unknown_state.text'),
+                image: t('flow_img')
             })
         }
     } catch (e) {

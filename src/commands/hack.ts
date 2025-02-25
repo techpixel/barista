@@ -49,7 +49,7 @@ app.command('/hack', async ({ ack, payload }) => {
             await whisper({
                 user: payload.user_id,
                 header: "yooooo! ready to hack? here's what you gotta do...",
-                text: t('hack_initial_scrap')
+                text: t('hack.initial_scrap')
             })
 
             await start({

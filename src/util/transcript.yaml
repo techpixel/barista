@@ -107,6 +107,27 @@ templates:
 
         otherwise, feel free to stay and yap with us :3
   
+  hack:
+    initial_scrap:
+      - |
+        *make sure to tell everyone about what you're working on!* i'll start brewin' up your cup right after :3
+
+        say something like:
+        ```
+        i'm hacking on ________!! (fill in the blank)
+        ```
+
+        for example:
+        ```
+        i'm making the text boxes on my personal site draggable!
+        i'm working on the schematic of my rubber ducky pcb :3
+        i'm starting a slack bot that tracks time!!
+        ```
+        you can also send images with the message of what you're working on!
+
+        feel free to also send messages in this channel normally after, for example:
+        • progress updates! huge breakthroughs and cool demos are more than welcome!
+        • questions and asking for technical help! at the cafe, we're all here to help :D
 
   help:
     no_session:
@@ -157,3 +178,6 @@ templates:
         - "something went wrong"
       text:
         - "i'm a little slow rn *twitch twitch* try again in a bit"
+  
+
+  flow_img: https://cloud-1u362wm6h-hack-club-bot.vercel.app/0image.png

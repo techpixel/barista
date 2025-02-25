@@ -14,6 +14,8 @@ import './commands/cups';
 import './commands/board';
 import './commands/cups';
 import './commands/help';
+import './commands/yap';
+import './commands/hack'
 
 import './scraps/message';
 

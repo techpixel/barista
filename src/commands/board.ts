@@ -81,4 +81,11 @@ app.command('/board', async ({ ack, payload }) => {
 			}
 		});
     }
+
+    await app.client.chat.postEphemeral({
+        token: process.env.SLACK_BOT_TOKEN,
+        channel: payload.channel_id,
+        user: payload.user_id,
+        blocks
+    })
 });

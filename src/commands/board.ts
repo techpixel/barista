@@ -80,7 +80,7 @@ app.command('/board', async ({ ack, payload }) => {
 			"type": "section",
 			"text": {
 				"type": "mrkdwn",
-				"text": `• <@${session.slackId}> is working on ${session.scraps[0].text}!`
+				"text": `• <@${session.slackId}>: \`${session.scraps[0].text}!\``
 			}
 		});
     }

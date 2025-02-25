@@ -46,9 +46,9 @@ export async function whisper(args: {
 
     if (args.image) {
         blocks.push({
-            "type": "image",
-            "image_url": args.image,
-            "alt_text": "image"
+			"type": "image",
+			"image_url": "https://cloud-1u362wm6h-hack-club-bot.vercel.app/0image.png",
+			"alt_text": "image1"
         });
     }
 

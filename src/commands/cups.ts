@@ -2,9 +2,10 @@ import type { AnyBlock } from "@slack/types";
 import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
 import { prisma } from "../util/prisma";
-import { msToCups, msToFormattedHours, msToMinutes } from "../util/math";
+import { msToCups, msToFormattedHours, msToMinutes, seconds } from "../util/math";
 import { genProgressBar } from "../util/transcript";
 import { Commands, Intervals } from "../config";
+import { users } from "../util/airtable";
 
 app.command(Commands.CUPS, async ({ ack, payload }) => {
     await ack();
@@ -16,6 +17,21 @@ app.command(Commands.CUPS, async ({ ack, payload }) => {
         type: 'slash-command'
     })
 
+    const user = await prisma.user.findUnique({
+        where: {
+            slackId: payload.user_id
+        }
+    });
+
+    if (!user) {
+        await app.client.chat.postEphemeral({
+            channel: payload.channel_id,
+            user: payload.user_id,
+            text: `You haven't joined a huddle yet!`
+        });
+        return;
+    }
+
     const lifetimeElapsedRaw = await prisma.session.aggregate({
         where: {
             slackId: payload.user_id,
@@ -26,7 +42,12 @@ app.command(Commands.CUPS, async ({ ack, payload }) => {
         }
     });
 
-    const lifetimeElapsed = lifetimeElapsedRaw._sum.elapsed ? lifetimeElapsedRaw._sum.elapsed : 0;
+    const airtableUser = await users.find(user.airtableRecId);
+
+    console.log(airtableUser);
+    const addedCups = seconds((airtableUser.fields['Add time'] || 0) as number);
+
+    const lifetimeElapsed = (lifetimeElapsedRaw._sum.elapsed ? lifetimeElapsedRaw._sum.elapsed : 0) + addedCups;
 
     let blocks: AnyBlock[] = [{
         type: 'context',

@@ -6,6 +6,7 @@ import { whisper } from "../slack/whisper";
 import { prisma } from "../util/prisma";
 import start from "../sessions/start";
 import state from "../sessions/state";
+import { hasDeadlinePassed } from "../endTime";
 
 /*
 
@@ -25,6 +26,15 @@ export default async (args: {
         channel: Config.CAFE_CHANNEL,
         type: 'huddle_join'
     });
+
+    if (hasDeadlinePassed()) {
+        // await whisper({
+        //     user: args.slackId,
+        //     text: `cafe has ended!`
+        // });
+
+        return;
+    }
 
     const sessionState = await state({ slackId: args.slackId });
 

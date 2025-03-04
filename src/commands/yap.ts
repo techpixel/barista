@@ -1,3 +1,4 @@
+import { hasDeadlinePassed } from "../endTime";
 import cancel from "../sessions/cancel";
 import { app } from "../slack/bolt";
 import { mirrorMessage } from "../slack/logger";
@@ -16,6 +17,15 @@ app.command('/yap', async ({ ack, payload }) => {
         channel: payload.channel_id,
         type: 'slash-command'
     })
+
+    if (hasDeadlinePassed()) {
+        await whisper({
+            user: payload.user_id,
+            text: `cafe has ended!`
+        });
+
+        return;
+    }
 
     const session = await prisma.session.findFirst({
         where: {

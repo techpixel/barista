@@ -60,7 +60,9 @@ export async function addScrap(args: {
             state: nextSessionState,
 
             lastUpdate: now,
-            elapsed: args.session.elapsed + (now.getTime() - args.session.lastUpdate.getTime()),
+            elapsed: args.session.leftAt ? 
+            args.session.elapsed + (args.session.leftAt.getTime() - args.session.lastUpdate.getTime()) :
+            args.session.elapsed + (now.getTime() - args.session.lastUpdate.getTime()),
             
             scraps: {
                 create: {

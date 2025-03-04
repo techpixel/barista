@@ -1,9 +1,20 @@
 import { app } from "../slack/bolt";
 import { Config } from "../config";
 import { t } from "../util/transcript";
+import { hasDeadlinePassed } from "../endTime";
+import { whisper } from "../slack/whisper";
 
 app.event('member_joined_channel', async ({ event, client }) => {
     if (event.channel !== Config.CAFE_CHANNEL) { return; }
+
+    if (hasDeadlinePassed()) {
+        await whisper({
+            user: event.user,
+            text: `cafe has ended!`
+        });
+
+        return;
+    }
 
     await client.chat.postEphemeral({
         channel: event.channel,
